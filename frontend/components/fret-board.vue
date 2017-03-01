@@ -1,5 +1,8 @@
 <template>
   <div>
+    <header>
+      <em style="font-size: 20px;" class="name">{{chord.name}}</em>&nbsp;&nbsp;<span class="bases">{{basesDisplay}}</span>
+    </header>
     <div class="fretboard">
     </div>
   </div>
@@ -10,7 +13,7 @@
       width: 150,
       height: 210,
       top: 30,
-      left: 0,
+      left: 5,
       stroke: 3,
       numStrings: 6,
       noteRadius: 7,
@@ -21,7 +24,7 @@
       width: 75,
       height: 105,
       top: 15,
-      left: 0,
+      left: 5,
       stroke: 1,
       numStrings: 6,
       noteRadius: 4,
@@ -32,7 +35,7 @@
       width: 50,
       height: 70,
       top: 12,
-      left: 0,
+      left: 5,
       stroke: 1,
       numStrings: 6,
       noteRadius: 3,
@@ -45,11 +48,11 @@
     data() {
       return {
         chord: {
-          name: "E",
-          notes: [[5,2], [4,2], [3,1]],
-          bases: ["6", "4/5"]
+          name: "A",
+          notes: [-1, 0, 2, 2, 2, 0],
+          bases: ["6", "5"],
         },
-        size: 'tiny'
+        size: 'default'
       };
     },
     mounted () {
@@ -58,6 +61,9 @@
     computed: {
       config() {
         return configs[this.size];
+      },
+      basesDisplay() {
+        return this.chord.bases.join(",");
       },
       stringGap() {
         return this.config.width / ( this.config.numStrings - 1 );
@@ -71,7 +77,6 @@
         bonsai.run(el.querySelector(".fretboard"), {
           code: () => {
             let fretBoardOptions = stage.options.fretBoard;
-            console.log("FRET BOARD OPTS: ", stage.options.fretBoard);
             let fretBoard = new Rect(fretBoardOptions.left, fretBoardOptions.top,
                 fretBoardOptions.width, fretBoardOptions.height).stroke('#000', fretBoardOptions.stroke).addTo(stage);
             let stringPos = fretBoardOptions.stringGap;
@@ -82,21 +87,30 @@
               stringPos += fretBoardOptions.stringGap;
               fretPos += fretBoardOptions.fretGap;
             }
+            fretBoard.addTo(stage);
 
-            for (let noteIdx in fretBoardOptions.chord.notes) {
-              let note = fretBoardOptions.chord.notes[noteIdx];
-              let string = note[0];
-              let fret = note[1];
-        
+            let string = 6;
+            for (let string = 6; string > 0; --string) {
+              let fret = fretBoardOptions.chord.notes[fretBoardOptions.numStrings - string];
               stringPos = fretBoardOptions.stringGap * (fretBoardOptions.numStrings - string);
               fretPos = fretBoardOptions.fretGap * fret;
-    
-              new Circle(fretBoardOptions.left + fretBoardOptions.stringGap * (fretBoardOptions.numStrings - string),
-                (fretBoardOptions.top - fretBoardOptions.noteRadius*2) + fretBoardOptions.fretGap * fret, fretBoardOptions.noteRadius).fill('black').addTo(stage);
+   
+              if (fret >= 0) {
+                let circle = new Circle(fretBoardOptions.left + fretBoardOptions.stringGap * (fretBoardOptions.numStrings - string),
+                  (fretBoardOptions.top - fretBoardOptions.noteRadius*2) + fretBoardOptions.fretGap * fret, fretBoardOptions.noteRadius).stroke('#000', 1)
+                if (fret > 0) {
+                  circle.fill('black');
+                }
+                circle.addTo(stage);
+              } else {
+                new Text('x').attr({fontSize: fretBoardOptions.noteRadius * 4, x: fretBoardOptions.left - fretBoardOptions.noteRadius + fretBoardOptions.stringGap * (fretBoardOptions.numStrings - string), y: (fretBoardOptions.top - fretBoardOptions.noteRadius*3.8)}).addTo(stage);
+              }
             }
 
+            /* TODO: MOVE TO MARKUP
             new Text(fretBoardOptions.chord.name).attr({fontSize: fretBoardOptions.noteNameSize, x: fretBoardOptions.left, y: (fretBoardOptions.top - fretBoardOptions.noteNameSize)}).addTo(stage);
             new Text(fretBoardOptions.chord.bases.join(",")).attr({fontSize: fretBoardOptions.baseSize, x: fretBoardOptions.left + fretBoardOptions.noteNameSize, y: (fretBoardOptions.top - fretBoardOptions.baseSize*1.3)}).addTo(stage);
+            */
           },
           fretBoard: fretBoard,
           height: fretBoard.height + fretBoard.top + 10,
