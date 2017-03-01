@@ -1,2 +1,2 @@
 browserify: npm install && npm run watchify
-rails: rails server
+rails: PORT=3000 rails server

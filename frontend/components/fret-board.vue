@@ -5,50 +5,65 @@
   </div>
 </template>
 <script>
+  const configs = {
+    default: {
+      width: 150,
+      height: 210,
+      top: 30,
+      left: 0,
+      stroke: 3,
+      numStrings: 6,
+      noteRadius: 7,
+      noteNameSize: 30,
+      baseSize: 15
+    },
+    small: {
+      width: 75,
+      height: 105,
+      top: 15,
+      left: 0,
+      stroke: 1,
+      numStrings: 6,
+      noteRadius: 4,
+      noteNameSize: 15,
+      baseSize: 9
+    },
+    tiny: {
+      width: 50,
+      height: 70,
+      top: 12,
+      left: 0,
+      stroke: 1,
+      numStrings: 6,
+      noteRadius: 3,
+      noteNameSize: 12,
+      baseSize: 7
+    }
+  };
   export default {
     name: 'fret-board',
     data() {
       return {
-        width: 150,
-        height: 210,
-        top: 30,
-        left: 0,
-        numStrings: 6,
-        noteRadius: 5,
-        noteNameSize: 30,
-        baseSize: 15,
         chord: {
           name: "E",
           notes: [[5,2], [4,2], [3,1]],
           bases: ["6", "4/5"]
-        }
+        },
+        size: 'tiny'
       };
     },
     mounted () {
-      this.draw(this.$el, {
-        width: this.width,
-        height: this.height,
-        top: this.top,
-        left: this.left,
-        numStrings: this.numStrings,
-        noteRadius: this.noteRadius,
-        noteNameSize: this.noteNameSize,
-        baseSize: this.baseSize,
-        chord: {
-          name: this.chord.name,
-          notes: this.chord.notes,
-          bases: this.chord.bases
-        },
-        fretGap: this.fretGap,
-        stringGap: this.stringGap
-      });
+      this.draw(this.$el, Object.assign({}, this.config, {chord: this.chord}, { fretGap: this.fretGap, stringGap: this.stringGap }));
     },
     computed: {
+      config() {
+        return configs[this.size];
+      },
       stringGap() {
-        return this.width / ( this.numStrings - 1 );
+        return this.config.width / ( this.config.numStrings - 1 );
       },
       fretGap() {
-        return this.height / ( this.numStrings - 1);
+        return this.config.height / ( this.config.numStrings - 1);
       }
     },
     methods: {
@@ -56,8 +71,9 @@
         bonsai.run(el.querySelector(".fretboard"), {
           code: () => {
             let fretBoardOptions = stage.options.fretBoard;
+            console.log("FRET BOARD OPTS: ", stage.options.fretBoard);
             let fretBoard = new Rect(fretBoardOptions.left, fretBoardOptions.top,
-                fretBoardOptions.width, fretBoardOptions.height).stroke('#000', 3).addTo(stage);
+                fretBoardOptions.width, fretBoardOptions.height).stroke('#000', fretBoardOptions.stroke).addTo(stage);
             let stringPos = fretBoardOptions.stringGap;
             let fretPos = fretBoardOptions.fretGap;
             for (let i = 1; i < (fretBoardOptions.numStrings - 1); ++i ) {
