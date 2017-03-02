@@ -1,9 +1,9 @@
 <template>
-  <div>
-    <header>
-      <em style="font-size: 20px;" class="name">{{chord.name}}</em>&nbsp;&nbsp;<span class="bases">{{basesDisplay}}</span>
+  <div class="fretboard">
+    <header :class="boardSize" v-if="chord">
+      <span class="name">{{chord.name}}</span>&nbsp;&nbsp;<span class="bases">{{basesDisplay}}</span>
     </header>
-    <div class="fretboard">
+    <div class="image">
     </div>
   </div>
 </template>
@@ -45,25 +45,22 @@
   };
   export default {
     name: 'fret-board',
-    data() {
-      return {
-        chord: {
-          name: "A",
-          notes: [-1, 0, 2, 2, 2, 0],
-          bases: ["6", "5"],
-        },
-        size: 'default'
-      };
+    props: {
+      boardSize: {
+        type: String,
+        default: 'default'
+      },
+      chord: Object
     },
     mounted () {
       this.draw(this.$el, Object.assign({}, this.config, {chord: this.chord}, { fretGap: this.fretGap, stringGap: this.stringGap }));
     },
     computed: {
       config() {
-        return configs[this.size];
+        return configs[this.boardSize];
       },
       basesDisplay() {
-        return this.chord.bases.join(",");
+        return this.chord && this.chord.bases.join(",");
       },
       stringGap() {
         return this.config.width / ( this.config.numStrings - 1 );
@@ -74,7 +71,7 @@
     },
     methods: {
       draw: (el, fretBoard) => {
-        bonsai.run(el.querySelector(".fretboard"), {
+        bonsai.run(el.querySelector(".image"), {
           code: () => {
             let fretBoardOptions = stage.options.fretBoard;
             let fretBoard = new Rect(fretBoardOptions.left, fretBoardOptions.top,
@@ -89,28 +86,25 @@
             }
             fretBoard.addTo(stage);
 
-            let string = 6;
-            for (let string = 6; string > 0; --string) {
-              let fret = fretBoardOptions.chord.notes[fretBoardOptions.numStrings - string];
-              stringPos = fretBoardOptions.stringGap * (fretBoardOptions.numStrings - string);
-              fretPos = fretBoardOptions.fretGap * fret;
-   
-              if (fret >= 0) {
-                let circle = new Circle(fretBoardOptions.left + fretBoardOptions.stringGap * (fretBoardOptions.numStrings - string),
-                  (fretBoardOptions.top - fretBoardOptions.noteRadius*2) + fretBoardOptions.fretGap * fret, fretBoardOptions.noteRadius).stroke('#000', 1)
-                if (fret > 0) {
-                  circle.fill('black');
+            if (fretBoardOptions.chord) {
+              let string = 6;
+              for (let string = 6; string > 0; --string) {
+                let fret = fretBoardOptions.chord.notes[fretBoardOptions.numStrings - string];
+                stringPos = fretBoardOptions.stringGap * (fretBoardOptions.numStrings - string);
+                fretPos = fretBoardOptions.fretGap * fret;
+     
+                if (fret >= 0) {
+                  let circle = new Circle(fretBoardOptions.left + fretBoardOptions.stringGap * (fretBoardOptions.numStrings - string),
+                    (fretBoardOptions.top - fretBoardOptions.noteRadius*2) + fretBoardOptions.fretGap * fret, fretBoardOptions.noteRadius).stroke('#000', 1)
+                  if (fret > 0) {
+                    circle.fill('black');
+                  }
+                  circle.addTo(stage);
+                } else {
+                  new Text('x').attr({fontSize: fretBoardOptions.noteRadius * 4, x: fretBoardOptions.left - fretBoardOptions.noteRadius + fretBoardOptions.stringGap * (fretBoardOptions.numStrings - string), y: (fretBoardOptions.top - fretBoardOptions.noteRadius*3.8)}).addTo(stage);
                 }
-                circle.addTo(stage);
-              } else {
-                new Text('x').attr({fontSize: fretBoardOptions.noteRadius * 4, x: fretBoardOptions.left - fretBoardOptions.noteRadius + fretBoardOptions.stringGap * (fretBoardOptions.numStrings - string), y: (fretBoardOptions.top - fretBoardOptions.noteRadius*3.8)}).addTo(stage);
               }
             }
-
-            /* TODO: MOVE TO MARKUP
-            new Text(fretBoardOptions.chord.name).attr({fontSize: fretBoardOptions.noteNameSize, x: fretBoardOptions.left, y: (fretBoardOptions.top - fretBoardOptions.noteNameSize)}).addTo(stage);
-            new Text(fretBoardOptions.chord.bases.join(",")).attr({fontSize: fretBoardOptions.baseSize, x: fretBoardOptions.left + fretBoardOptions.noteNameSize, y: (fretBoardOptions.top - fretBoardOptions.baseSize*1.3)}).addTo(stage);
-            */
           },
           fretBoard: fretBoard,
           height: fretBoard.height + fretBoard.top + 10,

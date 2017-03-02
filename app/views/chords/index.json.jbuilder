@@ -1,2 +1,4 @@
 json.key_format! camelize: :lower
-json.({chord: @chord})
+json.set! :chords do
+  json.array! @chords
+end

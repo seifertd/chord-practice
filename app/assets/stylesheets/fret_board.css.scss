@@ -1,0 +1,53 @@
+.chord-list {
+  border: 1px solid #333;
+  height: 575px;
+  width: 90px;
+  float: left;
+  margin-right: 10px;
+  padding-left: 5px;
+  padding-right: 5px;
+  ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: inline-block;
+    overflow: hidden;
+    overflow-y: scroll;
+    height: 500px;
+    width: 90px;
+    white-space: nowrap;
+    li {
+      vertical-align: top;
+    }
+  }
+}
+
+.fretboard {
+  header {
+    padding-left: 5px;
+    .name {
+      font-weight: bold;
+    }
+    &.tiny {
+      .name {
+        font-size: 12px;
+      }
+      .bases {
+        font-size: 10px;
+      }
+    }
+    &.small {
+      .name {
+        font-size: 16px;
+      }
+      .bases {
+        font-size: 12px;
+      }
+    }
+    &.default {
+      .name {
+        font-size: 20px;
+      }
+    }
+  }
+}
