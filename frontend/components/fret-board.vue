@@ -1,5 +1,5 @@
 <template>
-  <div class="fretboard">
+  <div class="fretboard" :data-name="chord.name">
     <header :class="boardSize" v-if="chord">
       <span class="name">{{chord.name}}</span>&nbsp;&nbsp;<span class="bases">{{basesDisplay}}</span>
     </header>
