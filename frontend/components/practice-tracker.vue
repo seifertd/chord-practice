@@ -1,38 +1,38 @@
 <template>
-  <div>
-    <div class="bigone d-flex flex-column">
-      <div class="header text-center p-3">Chord Practice</div>
-      <div class="text-center p-2 mb-3">Nav bar</div>
-      <div class="main d-flex">
-        <div class="container-fluid d-flex">
-          <div class="row">
-            <div class="col-4 d-flex flex-column">
-              <div class="chord-list library" @dragover.prevent @drop="drop">
-                <h5>Chord Library</h5>
-                <ul>
-                  <li v-for="chord in allChords" draggable="true" @dragstart="dragStart">
-                    <fret-board boardSize="tiny" :chord="chord"></fret-board>
-                  </li>
-                </ul>
-              </div>
-            </div>
-            <div class="col-4 d-flex flex-column">
-              <div class="chord-list mine" @dragover.prevent @drop="drop">
-                <h5>My Chords</h5>
-                <ul>
-                  <li v-for="chord in myChords" draggable="true" @dragstart="dragStart">
-                    <fret-board boardSize="tiny" :chord="chord"></fret-board>
-                  </li>
-                </ul>
-              </div>
-            </div>
-            <div class="col-4 d-flex flex-column">
-              Other stuff here ...
-            </div>
-          </div>
+  <div class="container">
+    <div class="row">
+      <div class="header text-center">Chord Practice</div>
+    </div>
+    <div class="row">
+      <div class="text-center">Nav bar</div>
+    </div>
+    <div class="row">
+      <div class="col-4">
+        <div class="chord-list library" @dragover.prevent @drop="drop">
+          <h6>Chord Library</h6>
+          <ul class="list-group">
+            <li class="list-group-item list-group-item-action" v-for="chord in allChords" draggable="true" @dragstart="dragStart">
+              <fret-board boardSize="tiny" :chord="chord"></fret-board>
+            </li>
+          </ul>
         </div>
       </div>
-      <div class="footer text-center p-3 mt-auto">Footer</div>
+      <div class="col-4">
+        <div class="chord-list mine" @dragover.prevent @drop="drop">
+          <h6>My Chords</h6>
+          <ul class="list-group">
+            <li class="list-group-item list-group-item-action" v-for="chord in myChords" draggable="true" @dragstart="dragStart">
+              <fret-board boardSize="tiny" :chord="chord"></fret-board>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="col-4">
+        Other stuff here ...
+      </div>
+    </div>
+    <div class="row">
+      <div class="footer">Footer</div>
     </div>
   </div>
 </template>
