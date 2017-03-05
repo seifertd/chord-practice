@@ -4,10 +4,23 @@ This web applications allows people learning guitar to practice and track progre
 of chord switching. While learning guitar, it is important to exercise your muscle
 memory by switching between chords. This app tracks a user's known chords (from
 a library of them) and will run chord switching practice sessions, tracking the number
-of switches the guitarist can make in one minute. Each session consists of practicing
-switches between a configurable number of chord pairs for a configurable duration.
-Statistics over time are kept and can be graphed to track progress.
+of switches the guitarist can make between a given pair of chords. Each practice
+session consists of practicing switches between a configurable number of chord pairs
+for a configurable duration.  Statistics over time are kept and can be graphed to
+track progress.
 
+## Data Model
+
+```
++-----------+    +--------------+    +--------------+
+|  Player   |    |  Session     |    |  Pair        |
++-----------+    +--------------+    +--------------+
+| * chords  |1  N| * created_at |1  N| * first      |
+| * name    +----+ * duration   +----+ * second     |
+|           |    |              |    | * switches   |
+|           |    |              |    |              |
++-----------+    +--------------+    +--------------+
+```
 
 ## Development
 
