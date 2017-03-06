@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  uuid: player1
+  name: Player One
+  chords: "---\n- A\n- B\n"
+
+two:
+  uuid: player2
+  name: Player Two
+  chords: "---\n- G\n- D\n"

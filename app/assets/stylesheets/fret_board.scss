@@ -1,19 +1,15 @@
 .chord-list {
-  height: 450px;
+  width: 100%;
   border: 1px #ccc solid;
   padding: 10px;
   ul {
-    list-style-type: none;
-    margin-left: auto;
-    margin-right: auto;
-    padding: 0;
-    display: inline-block;
-    overflow: hidden;
-    overflow-y: scroll;
-    height: 375px;
+    overflow-x: scroll;
     white-space: nowrap;
+    width: 100%;
     li {
-      vertical-align: top;
+      float: none;
+      display: inline-block;
+      width: 100px;
     }
   }
 }
