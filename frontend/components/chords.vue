@@ -1,12 +1,6 @@
 <template>
   <div class="container">
     <div class="row">
-      <div class="header text-center">Chord Practice</div>
-    </div>
-    <div class="row">
-      <div class="text-center">Nav bar</div>
-    </div>
-    <div class="row">
       <div class="col-12">
         <div class="chord-list library">
           <h6>Chord Library</h6>
@@ -65,7 +59,7 @@
  };
 
  export default {
-   name: 'practice-tracker',
+   name: 'chords',
    data() {
      return {
        allChords: [],

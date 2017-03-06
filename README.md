@@ -17,7 +17,7 @@ track progress.
 +-----------+    +--------------+    +--------------+
 | * chords  |1  N| * created_at |1  N| * first      |
 | * name    +----+ * duration   +----+ * second     |
-|           |    |              |    | * switches   |
+| * uuid    |    |              |    | * switches   |
 |           |    |              |    |              |
 +-----------+    +--------------+    +--------------+
 ```

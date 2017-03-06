@@ -3,8 +3,13 @@ import Vue from 'vue'
 import Axios from 'axios'
 
 // COMPONENTS
-import PracticeTracker from './components/practice-tracker.vue'
+import Chords from './components/chords.vue'
 import FretBoard from './components/fret-board.vue'
+
+// ROUTES
+const routes = {
+  '/': Chords
+}
 
 // Add Rails' CSRF token header to requests
 Axios.defaults.headers.common['X-CSRF-Token'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content')
@@ -13,9 +18,21 @@ Axios.defaults.headers.common['X-CSRF-Token'] = document.querySelector('meta[nam
 Vue.component('fret-board', FretBoard);
 
 // GLOBAL COMPONENT
-window.myApp = new Vue({
+const app = new Vue({
   el: '#app',
-  render: function (createElement) {
-    return createElement(PracticeTracker)
+  data: {
+    currentRoute: window.location.pathname
+  },
+  computed: {
+    ViewComponent () {
+      return routes[this.currentRoute] || Chords;
+    }
+  },
+  render: function(createElement) {
+    return createElement(this.ViewComponent);
   }
+});
+
+window.addEventListener('popstate', () => {
+  app.currentRoute = window.location.pathname;
 })
