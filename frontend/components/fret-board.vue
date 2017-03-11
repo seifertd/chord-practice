@@ -3,8 +3,7 @@
     <header :class="boardSize" v-if="chord">
       <span class="name">{{chord.name}}</span>&nbsp;&nbsp;<span class="bases">{{basesDisplay}}</span>
     </header>
-    <div class="image">
-    </div>
+    <div class="image"/>
   </div>
 </template>
 <script>
@@ -52,6 +51,9 @@
       },
       chord: Object
     },
+    updated () {
+      this.draw(this.$el, Object.assign({}, this.config, {chord: this.chord}, { fretGap: this.fretGap, stringGap: this.stringGap }));
+    },
     mounted () {
       this.draw(this.$el, Object.assign({}, this.config, {chord: this.chord}, { fretGap: this.fretGap, stringGap: this.stringGap }));
     },
@@ -71,6 +73,7 @@
     },
     methods: {
       draw: (el, fretBoard) => {
+        el.querySelector(".image").innerHTML = "";
         bonsai.run(el.querySelector(".image"), {
           code: () => {
             let fretBoardOptions = stage.options.fretBoard;

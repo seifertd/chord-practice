@@ -1,11 +1,19 @@
 class ChordsController < ApplicationController
+  before_action :load_user_data
+
   def show
-    @chords = Chord.all
-    @player = current_player
   end
 
   def update
     logger.debug("Updating chords or player: #{params.inspect}")
-    current_player.update(chords: params[:chords])
+    @player.update(chords: params[:chords])
+    render :show
+  end
+
+  private
+
+  def load_user_data
+    @chords = Chord.all
+    @player = current_player
   end
 end

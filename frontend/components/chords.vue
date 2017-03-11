@@ -1,10 +1,10 @@
 <template>
   <div class="container">
-    <div class="row">
+    <div class="row mt-1">
       <div class="col-12">
-        <div class="chord-list library">
-          <h6>Chord Library</h6>
-          <ul class="list-group-horizontal">
+        <div class="card chord-list library">
+          <h6 class="card-header">Chord Library</h6>
+          <ul class="card-block list-group-horizontal">
             <li class="list-group-item list-group-item-action" v-for="chord in allChords" @click="swapChord" @touchStart="swapChord">
               <fret-board boardSize="tiny" :chord="chord" z-index="-1"></fret-board>
             </li>
@@ -14,10 +14,17 @@
     </div>
     <div class="row">
       <div class="col-12">
-        <div class="chord-list mine">
-          <h6>My Chords</h6>
-          <ul class="list-group-horizontal">
-            <li class="list-group-item list-group-item-action" v-for="chord in myChords">
+        <p class="text-center m-0 p-0">
+          <i class="fa fa-arrows-v" aria-hidden="true"></i>
+        </p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <div class="card chord-list mine">
+          <h6 class="card-header">My Chords</h6>
+          <ul class="card-block list-group-horizontal">
+            <li class="list-group-item list-group-item-action" v-for="chord in myChords" @click="swapChord" @touchStart="swapChord">
               <fret-board boardSize="tiny" :chord="chord" z-index="-1"></fret-board>
             </li>
           </ul>
@@ -82,7 +89,7 @@
          targetList.push(chord);
          targetList.sort(sortByName);
          sourceList.sort(sortByName);
-         Axios.put('/chords', {chords: targetList.map(chord => chord.name)}).then( response => {
+         Axios.put('/chords', {chords: this.myChords.map(chord => chord.name)}).then( response => {
          }, error => {
            alert("Could not save: ", error);
          });
