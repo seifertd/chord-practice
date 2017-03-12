@@ -23,10 +23,11 @@ ActiveRecord::Schema.define(version: 20170306025253) do
   end
 
   create_table "sessions", force: :cascade do |t|
-    t.integer  "duration"
+    t.integer  "duration",   default: 1
+    t.boolean  "complete",   default: false
     t.integer  "player_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
     t.index ["player_id"], name: "index_sessions_on_player_id"
   end
 
