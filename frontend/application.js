@@ -4,11 +4,13 @@ import Axios from 'axios'
 
 // COMPONENTS
 import Chords from './components/chords.vue'
+import Sessions from './components/sessions.vue'
 import FretBoard from './components/fret-board.vue'
 
 // ROUTES
 const routes = {
-  '/': Chords
+  '/': Chords,
+  '/sessions': Sessions
 }
 
 // Add Rails' CSRF token header to requests

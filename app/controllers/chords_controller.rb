@@ -1,6 +1,5 @@
 class ChordsController < ApplicationController
   before_action :load_user_data
-
   def show
   end
 
