@@ -13,20 +13,20 @@
           <form>
             <div class="form-group">
               <label for="numberOfSwitches">Number of chord pairs</label>
-              <select class="form-control" id="numberOfSwitches">
+              <select class="form-control" id="numberOfSwitches" v-model="newSession.numberOfSwitches">
                 <option v-for="number in availableSwitches" :value="number">{{number}}</option>
               </select>
             </div>
             <div class="form-group">
               <label for="duration">Duration of each pair</label>
-              <select class="form-control" id="duration">
-                <option v-for="number in availableDurations" :value="number">{{number}}</option>
+              <select class="form-control" id="duration" v-model="newSession.duration">
+                <option v-for="duration in availableDurations" :value="duration">{{duration}}</option>
               </select>
             </div>
           </form>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-primary">Start</button>
+          <button type="button" class="btn btn-primary" @click="startSession">Start</button>
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
         </div>
       </div>
@@ -34,7 +34,7 @@
   </div>
   <div class="row mt-1">
     <div class="col-12">
-      <p class="text-right p-0 m-0"><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#startPractice"><i class="fa fa-plus" aria-hidden="true"></i> Start</button></p>
+      <p class="p-0 m-0"><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#startPractice"><i class="fa fa-plus" aria-hidden="true"></i> Start</button></p>
     </div>
   </div>
   <div class="row mt-1">
@@ -48,7 +48,7 @@
             <th>Duration</th>
           </tr>
           <tr v-for="session in sessions">
-            <th>{{session.createdAt}}</th>
+            <th>{{format(session.created_at, 'YYYY-MM-DD HH:MM')}}</th>
             <th>{{session.numSwitches}}</th>
             <th>{{session.duration}}</th>
           </tr>
@@ -63,11 +63,16 @@
 </template>
 <script>
 import Axios from 'axios'
+import format from 'date-fns/format'
 export default {
   name: 'sessions',
   data() {
     return {
-      sessions: []
+      sessions: [],
+      newSession: {
+        numberOfSwitches: 10,
+        duration: 1
+      }
     }
   },
   computed: {
@@ -79,6 +84,19 @@ export default {
     },
     availableDurations: function() {
       return [1,2,3];
+    }
+  },
+  methods: {
+    format,
+    startSession: function(event) {
+      Axios.post('/sessions', {session: this.newSession}).then(
+        response => {
+          alert("Started session: ", response);
+        },
+        error => {
+          alert("Could not create session: ", error);
+        }
+      );
     }
   },
   created() {
