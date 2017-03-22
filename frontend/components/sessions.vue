@@ -54,7 +54,7 @@
           </tr>
         </table>
         <div class="card-block" v-else>
-          <p><strong>You have no practice sessions yet.</strong></p>
+          <div class="alert alert-info"><strong>Hey!</strong> You have no practice sessions yet. Why not <a href="#" @click="startSession" class="alert-link">start one?</a></div>
         </div>
       </div>
     </div>
@@ -97,6 +97,7 @@ export default {
           alert("Could not create session: ", error);
         }
       );
+      return false;
     }
   },
   created() {
