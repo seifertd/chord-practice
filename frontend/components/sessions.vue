@@ -35,8 +35,12 @@
   <div class="row mt-1">
     <div class="col-12">
       <p class="text-right p-0 m-0"><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#startPractice"><i class="fa fa-plus" aria-hidden="true"></i> Start</button></p>
+    </div>
+  </div>
+  <div class="row mt-1">
+    <div class="col-12">
       <div class="card">
-        <h6 class="card-header" style="width: 100%">Practice Sessions</h6>
+        <h6 class="card-header">Practice Sessions</h6>
         <table class="table card-block" v-if="hasSessions">
           <tr>
             <th>Date</th>
@@ -44,6 +48,9 @@
             <th>Duration</th>
           </tr>
           <tr v-for="session in sessions">
+            <th>{{session.createdAt}}</th>
+            <th>{{session.numSwitches}}</th>
+            <th>{{session.duration}}</th>
           </tr>
         </table>
         <div class="card-block" v-else>
@@ -75,7 +82,7 @@ export default {
     }
   },
   created() {
-    Axios.get('/chords.json').then( response => {
+    Axios.get('/sessions.json').then( response => {
       this.sessions = response.data.sessions;
     }, error => {
     });
