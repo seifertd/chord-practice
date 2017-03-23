@@ -10,6 +10,7 @@ class SessionsController < ApplicationController
   # POST /sessions
   def create
     @session = current_player.sessions.create!(session_params.merge(complete: false))
+    @session.generate_random_pairs(params[:numberOfSwitches])
   end
 
   private
