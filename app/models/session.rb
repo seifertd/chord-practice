@@ -6,8 +6,7 @@ class Session < ApplicationRecord
     pairs = Set.new
     chord_combos = chords.combination(2).to_a
     chord_combos.sample(number_of_pairs).each do |chord|
-      puts "CHORD1: #{chord[0].inspect}"
-      puts "CHORD2: #{chord[1].inspect}"
+      self.pairs.create(first: chord[0].name, second: chord[1].name)
     end
   end
 end
