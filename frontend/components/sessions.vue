@@ -16,6 +16,12 @@
               <select class="form-control" id="numberOfSwitches" v-model="newSession.numberOfSwitches">
                 <option v-for="number in availableSwitches" :value="number">{{number}}</option>
               </select>
+              <div class="form-check">
+                <label clas="form-check-label">
+                  <input class="form-check-input ml-1" type="checkbox" value="true" checked>
+                  Choose a random selection
+                </label>
+              </div>
             </div>
             <div class="form-group">
               <label for="duration">Duration of each pair</label>
@@ -41,17 +47,32 @@
     <div class="col-12">
       <div class="card">
         <h6 class="card-header">Practice Sessions</h6>
-        <table class="table card-block" v-if="hasSessions">
-          <tr>
-            <th>Date</th>
-            <th>Number of Switches</th>
-            <th>Duration</th>
-          </tr>
-          <tr v-for="session in sessions">
-            <th>{{format(session.created_at, 'YYYY-MM-DD HH:MM')}}</th>
-            <th>{{session.numSwitches}}</th>
-            <th>{{session.duration}}</th>
-          </tr>
+        <table class="table table-sm table-bordered card-block" v-if="hasSessions">
+          <thead class="thead-default">
+            <tr>
+              <th>Date</th>
+              <th>Number of Switches</th>
+              <th>Duration</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="session in sessions">
+              <td>{{format(session.created_at, 'YYYY-MM-DD HH:MM')}}</td>
+              <td>{{session.numSwitches}}</td>
+              <td>{{session.duration}}</td>
+              <td>
+                <div class="btn-group">
+                  <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Action
+                  </button>
+                  <div class="dropdown-menu dropdown-menu-right m-0 p-0">
+                    <a class="dropdown-item m-1 p-0 h-25" href="#">Delete</a>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </tbody>
         </table>
         <div class="card-block" v-else>
           <div class="alert alert-info"><strong>Hey!</strong> You have no practice sessions yet. Why not <a href="#" @click="startSession" class="alert-link">start one?</a></div>
