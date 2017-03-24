@@ -9,9 +9,10 @@
     "build": "cross-env NODE_ENV=production browserify -g envify frontend/application.js | uglifyjs -c warnings=false -m > app/assets/javascripts/application.js"
   },
   "dependencies": {
-    "axios": "^0.15.2",
+    "axios": "^0.15.3",
     "date-fns": "^1.28.1",
-    "vue": "^2.0.0"
+    "vue": "^2.2.5",
+    "vueify": "^9.4.1"
   },
   "devDependencies": {
     "babel-core": "^6.0.0",
