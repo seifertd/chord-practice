@@ -3,8 +3,8 @@ class CreatePairs < ActiveRecord::Migration[5.0]
     create_table :pairs do |t|
       t.string :first
       t.string :second
+      t.integer :switches, default: 0
       t.references :session, foreign_key: true
-      t.timestamps
     end
     add_index :pairs, [:session_id, :first, :second], unique: true
   end

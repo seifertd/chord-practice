@@ -58,8 +58,8 @@
           </thead>
           <tbody>
             <tr v-for="session in sessions">
-              <td>{{format(session.created_at, 'YYYY-MM-DD HH:MM')}}</td>
-              <td>{{session.numSwitches}}</td>
+              <td>{{format(session.createdAt, 'YYYY-MM-DD HH:MM')}}</td>
+              <td>{{session.pairs.length}}</td>
               <td>{{session.duration}}</td>
               <td>
                 <div class="btn-group">
@@ -75,7 +75,7 @@
           </tbody>
         </table>
         <div class="card-block" v-else>
-          <div class="alert alert-info"><strong>Hey!</strong> You have no practice sessions yet. Why not <a href="#" @click="startSession" class="alert-link">start one?</a></div>
+          <div class="alert alert-info"><strong>Hey!</strong> You have no practice sessions yet. Why not <a href="#" data-toggle="modal" data-target="#startPractice" class="alert-link">start one?</a></div>
         </div>
       </div>
     </div>
@@ -110,11 +110,13 @@ export default {
   methods: {
     format,
     startSession: function(event) {
-      Axios.post('/sessions', {session: this.newSession}).then(
-        response => {
-          alert("Started session: ", response);
+      var mySessions = this.sessions;
+      Axios.post('/sessions', {session: this.newSession, format: 'json'}).then(
+        function(response) {
+          mySessions.push(response.data.session);
+          $("#startPractice").modal('hide');
         },
-        error => {
+        function(error) {
           alert("Could not create session: ", error);
         }
       );

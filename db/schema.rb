@@ -10,7 +10,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170306025253) do
+ActiveRecord::Schema.define(version: 20170323221743) do
+
+  create_table "pairs", force: :cascade do |t|
+    t.string  "first"
+    t.string  "second"
+    t.integer "switches",   default: 0
+    t.integer "session_id"
+    t.index ["session_id", "first", "second"], name: "index_pairs_on_session_id_and_first_and_second", unique: true
+    t.index ["session_id"], name: "index_pairs_on_session_id"
+  end
 
   create_table "players", force: :cascade do |t|
     t.string   "uuid"

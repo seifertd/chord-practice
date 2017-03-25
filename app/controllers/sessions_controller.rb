@@ -9,14 +9,16 @@ class SessionsController < ApplicationController
 
   # POST /sessions
   def create
+    request.format = :json
     @session = current_player.sessions.create!(session_params.merge(complete: false))
-    @session.generate_random_pairs(params[:numberOfSwitches])
+    @session.generate_random_pairs(params[:session][:numberOfSwitches])
+    @session.save!
   end
 
   private
 
   def session_params
-    params.permit(:duration, :complete)
+    params.require(:session).permit(:duration, :complete)
   end
 
   def get_session
