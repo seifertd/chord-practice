@@ -14,23 +14,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink">
   </head>
   <body>
-    <nav class="navbar navbar-toggleable-md navbar-light bg-faded">
-      <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <a class="navbar-brand" href="/"><%=image_tag 'guitar.png'%></a>
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav">
-          <% sections.each do | section | -%>
-            <li class="nav-item <%if section[:active] %>active<% end %>">
-            <a class="nav-link" href="<%=section[:path]%>"><%=section[:name]%> <% if section[:active] %><span class="sr-only">(current)</span><% end %></a>
-            </li>
-          <% end %>
-        </ul>
-      </div>
-    </nav>
-    <div class="container-fluid" id="app">
-      <%= yield %>
+    <div id="assets" data-brand-url="<%= image_url 'guitar.png' %>">
+    </div>
+    <div id="app">
     </div>
     <%= javascript_include_tag 'application' %>
   </body>

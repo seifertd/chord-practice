@@ -12,6 +12,7 @@
     "axios": "^0.15.3",
     "date-fns": "^1.28.1",
     "vue": "^2.2.5",
+    "vue-router": "^2.3.0",
     "vueify": "^9.4.1"
   },
   "devDependencies": {

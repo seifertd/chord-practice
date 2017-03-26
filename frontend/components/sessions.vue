@@ -67,7 +67,8 @@
                     Action
                   </button>
                   <div class="dropdown-menu dropdown-menu-right m-0 p-0">
-                    <a class="dropdown-item m-1 p-0 h-25" href="#">Delete</a>
+                    <a class="dropdown-item m-1 p-0 h-25 text-primary" href="#" v-if="!session.complete">Start</a>
+                    <a class="dropdown-item m-1 p-0 h-25 text-danger" href="#">Delete</a>
                   </div>
                 </div>
               </td>
