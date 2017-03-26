@@ -1,10 +1,14 @@
 class SessionsController < ApplicationController
-  before_action :get_session, only: [:show]
+  before_action :get_session, only: [:show, :destroy]
   def index
     @sessions = current_player.sessions
   end
 
   def show
+  end
+
+  def destroy
+    @session.destroy
   end
 
   # POST /sessions

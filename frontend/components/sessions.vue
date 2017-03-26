@@ -57,7 +57,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="session in sessions">
+            <tr v-for="session in sessions" :data-session-id="session.id">
               <td>{{format(session.createdAt, 'YYYY-MM-DD HH:MM')}}</td>
               <td>{{session.pairs.length}}</td>
               <td>{{session.duration}}</td>
@@ -67,8 +67,8 @@
                     Action
                   </button>
                   <div class="dropdown-menu dropdown-menu-right m-0 p-0">
-                    <a class="dropdown-item m-1 p-0 h-25 text-primary" href="#" v-if="!session.complete">Start</a>
-                    <a class="dropdown-item m-1 p-0 h-25 text-danger" href="#">Delete</a>
+                    <a class="dropdown-item m-1 p-0 h-25 text-primary" v-if="!session.complete">Start</a>
+                    <a class="dropdown-item m-1 p-0 h-25 text-danger" @click="deleteSession">Delete</a>
                   </div>
                 </div>
               </td>
@@ -110,6 +110,24 @@ export default {
   },
   methods: {
     format,
+    deleteSession: function(event) {
+      if (confirm("Are you sure?")) {
+        let sessionId = $(event.target).closest("tr")[0].dataset.sessionId;
+        let mySessions = this.sessions;
+        let sessionIdx = mySessions.findIndex(session => session.id == sessionId);
+        if (sessionIdx >= 0) {
+          Axios.delete(`/sessions/${sessionId}.json`).then(
+            function(response) {
+              mySessions.splice(sessionIdx,1);
+            },
+            function(error) {
+              alert("Could not delete session: ", error);
+            }
+          );
+        }
+      }
+      return false;
+    },
     startSession: function(event) {
       var mySessions = this.sessions;
       Axios.post('/sessions', {session: this.newSession, format: 'json'}).then(

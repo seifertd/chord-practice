@@ -1,1 +1,3 @@
-json.partial! 'sessions/session', session: @session
+json.session do
+  json.partial! 'sessions/session', session: @session
+end
