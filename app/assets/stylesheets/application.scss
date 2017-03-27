@@ -1,6 +1,10 @@
 @import "bootstrap";
 @import "fret_board";
 
+.hidden {
+  display: none;
+}
+
 a.chord-practice-brand {
   background: image-url('guitar.png');
   background-repeat: no-repeat;

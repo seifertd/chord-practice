@@ -67,7 +67,7 @@
                     Action
                   </button>
                   <div class="dropdown-menu dropdown-menu-right m-0 p-0">
-                    <a class="dropdown-item m-1 p-0 h-25 text-primary" v-if="!session.complete">Start</a>
+                    <a class="dropdown-item m-1 p-0 h-25 text-primary" v-if="!session.complete" :href="'/sessions/' + session.id">Start</a>
                     <a class="dropdown-item m-1 p-0 h-25 text-danger" @click="deleteSession">Delete</a>
                   </div>
                 </div>

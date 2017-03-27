@@ -10,11 +10,13 @@ Vue.use(VueRouter)
 import Main from './components/main.vue'
 import Chords from './components/chords.vue'
 import Sessions from './components/sessions.vue'
+import Practice from './components/practice.vue'
 import FretBoard from './components/fret-board.vue'
 
 // ROUTES
 const routes = [
   { path: '/', component: Chords },
+  { path: '/sessions/:id', component: Practice },
   { path: '/sessions', component: Sessions }
 ];
 const router = new VueRouter({
