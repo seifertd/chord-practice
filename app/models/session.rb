@@ -2,6 +2,14 @@ class Session < ApplicationRecord
   belongs_to :player
   has_many :pairs, dependent: :destroy
 
+  def started
+    pairs.any?(&:complete)
+  end
+
+  def done
+    pairs.all?(&:complete)
+  end
+
   def generate_random_pairs(number_of_pairs, chords = Chord.all)
     pairs = Set.new
     chord_combos = chords.sort_by(&:name).combination(2).to_a

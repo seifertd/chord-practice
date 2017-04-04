@@ -25,6 +25,11 @@
           </li>
         </ul>
       </div>
+      <form class="form-inline">
+        <button type="submit" class="btn btn-primary" v-if="!session.completed && !session.started">Start</button>
+        <button type="submit" class="btn btn-primary" v-if="!session.completed && session.started">Continue</button>
+        <button type="submit" class="btn btn-danger">Delete</button>
+      </form>
     </div>
   </div>
 </div>
@@ -35,7 +40,8 @@ import format from 'date-fns/format'
 export default {
   data() {
     return {
-      session: null
+      session: null,
+      boardSize: 'default'
     };
   },
   methods: {
