@@ -9,7 +9,7 @@
           <h6 class="card-header">Chord Library</h6>
           <ul class="card-block list-group-horizontal">
             <li class="list-group-item list-group-item-action" v-for="chord in allChords" @click="swapChord" @touchStart="swapChord">
-              <fret-board boardSize="tiny" :chord="chord" z-index="-1"></fret-board>
+              <fret-board boardSize="tiny" :chord="chord"></fret-board>
             </li>
           </ul>
         </div>
@@ -28,7 +28,7 @@
           <h6 class="card-header">My Chords</h6>
           <ul class="card-block list-group-horizontal">
             <li class="list-group-item list-group-item-action" v-for="chord in myChords" @click="swapChord" @touchStart="swapChord">
-              <fret-board boardSize="tiny" :chord="chord" z-index="-1"></fret-board>
+              <fret-board boardSize="tiny" :chord="chord"></fret-board>
             </li>
           </ul>
         </div>

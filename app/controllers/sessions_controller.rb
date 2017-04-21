@@ -15,7 +15,7 @@ class SessionsController < ApplicationController
   def create
     request.format = :json
     @session = current_player.sessions.create!(session_params.merge(complete: false))
-    @session.generate_random_pairs(params[:session][:numberOfSwitches])
+    @session.generate_random_pairs(params[:session][:numberOfSwitches], current_player.chords.map{|name| Chord.all.find{|chord| chord.name == name} })
     @session.save!
   end
 

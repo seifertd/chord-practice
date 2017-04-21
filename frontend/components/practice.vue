@@ -13,13 +13,13 @@
               <div class="container-fluid align-items-center">
                 <div class="row">
                   <div class="col-5">
-                    <fret-board :boardSize="boardSize" :chord="pair.firstChord" z-index="-1"></fret-board>
+                    <fret-board :boardSize="boardSize" :chord="pair.firstChord"></fret-board>
                   </div>
                   <div class="col-2">
                     <i class="fa fa-exchange" style="font-size: 40px" aria-hidden="true"></i>
                   </div>
                   <div class="col-5">
-                    <fret-board :boardSize="boardSize" :chord="pair.secondChord" z-index="-1"></fret-board>
+                    <fret-board :boardSize="boardSize" :chord="pair.secondChord"></fret-board>
                   </div>
                 </div>
               </div>
@@ -57,12 +57,15 @@
 <script>
 import Axios from 'axios'
 import format from 'date-fns/format'
+
+const DEFAULT_COUNTDOWN = 10;
+
 export default {
   data() {
     return {
       session: null,
       boardSize: 'default',
-      countDown: 3,
+      countDown: DEFAULT_COUNTDOWN,
       message: "Get ready to start switching ...",
       currentPair: null,
       state: 'Ready'
@@ -100,14 +103,13 @@ export default {
       } else {
         if (this.state == 'Waiting') {
           this.state = 'Switching';
-          //this.countDown = this.session.duration * 60;
-          this.countDown = 3;
+          this.countDown = this.session.duration * 60;
           this.message = "Switch as fast as you can!"
           setTimeout(this.incrementCountDown, 1000);
         } else {
           this.state = 'Recording';
           this.currentPair.complete = true;
-          this.countDown = 3;
+          this.countDown = DEFAULT_COUNTDOWN;
           this.message = "Get ready to start switching ...";
         }
       }
