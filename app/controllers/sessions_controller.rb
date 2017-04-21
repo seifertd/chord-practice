@@ -1,5 +1,5 @@
 class SessionsController < ApplicationController
-  before_action :get_session, only: [:show, :destroy]
+  before_action :get_session, only: [:show, :destroy, :update]
   def index
     @sessions = current_player.sessions
   end
@@ -17,6 +17,20 @@ class SessionsController < ApplicationController
     @session = current_player.sessions.create!(session_params.merge(complete: false))
     @session.generate_random_pairs(params[:session][:numberOfSwitches])
     @session.save!
+  end
+
+  # PUT /sessions/:id
+  def update
+    request.format = :json
+    logger.debug("Session #{@session.id} is complete? #{params['complete']}")
+    @session.complete = params['complete']
+    params['pairs'].each_with_index do |new_pair, idx|
+      old_pair = @session.pairs.find {|c| c.id == new_pair['id'] }
+      old_pair.switches = new_pair['switches']
+      logger.debug("   -> Pair #{idx} number of switches: #{new_pair['switches']}")
+      old_pair.save
+    end
+    @session.save
   end
 
   private
