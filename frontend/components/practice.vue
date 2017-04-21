@@ -42,8 +42,12 @@
           <div class="alert alert-info" v-if="state == 'Recording'">
             How many switches did you make? <input type="text" v-model="currentPair.switches" size="5"> <button type="submit" class="btn btn-primary" @click="recordSwitches()">Save</button>
           </div>
-          <button type="submit" class="btn btn-primary" @click="startSwitching()" v-if="state == 'Ready'">Start</button>
-          <button type="submit" class="btn btn-primary" @click="startSwitching()" v-if="state == 'Running'">Continue</button>
+          <div class="text-center">
+            <div class="btn-group">
+              <button type="submit" class="btn btn-primary" @click="startSwitching()" v-if="state == 'Ready'">Start</button>
+              <button type="submit" class="btn btn-primary" @click="startSwitching()" v-if="state == 'Running'">Continue</button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -57,12 +61,26 @@ export default {
   data() {
     return {
       session: null,
-      boardSize: 'small',
+      boardSize: 'default',
       countDown: 3,
       message: "Get ready to start switching ...",
       currentPair: null,
       state: 'Ready'
     };
+  },
+  mounted() {
+    let getBoardSize = () => {
+      let windowWidth = $(window).width();
+      if (windowWidth < 575) {
+        return 'small';
+      } else {
+        return 'default';
+      }
+    };
+    this.boardSize = getBoardSize();
+    $(window).resize((evt) => {
+      this.boardSize = getBoardSize();
+    });
   },
   methods: {
     format,
@@ -97,6 +115,7 @@ export default {
     recordSwitches() {
       if (this.session.pairs.every(pair => pair.complete)) {
         this.state = 'Complete';
+        this.session.complete = true;
         Axios.put(`/sessions/${this.session.id}.json`, this.session).then( response => {
         }, error => {
         });
