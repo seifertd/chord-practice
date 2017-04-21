@@ -47,6 +47,9 @@
     <div class="col-12">
       <div class="card">
         <h6 class="card-header">Practice Sessions</h6>
+        <div class="card-block" v-if="error">
+          <error :error="error" />
+        </div>
         <table class="table table-sm table-bordered card-block" v-if="hasSessions">
           <thead class="thead-default">
             <tr>
@@ -75,7 +78,7 @@
             </tr>
           </tbody>
         </table>
-        <div class="card-block" v-else>
+        <div class="card-block" v-else-if="!error">
           <div class="alert alert-info"><strong>Hey!</strong> You have no practice sessions yet. Why not <a href="#" data-toggle="modal" data-target="#startPractice" class="alert-link">start one?</a></div>
         </div>
       </div>
@@ -94,7 +97,8 @@ export default {
       newSession: {
         numberOfSwitches: 10,
         duration: 1
-      }
+      },
+      error: null
     }
   },
   computed: {
@@ -121,7 +125,7 @@ export default {
               mySessions.splice(sessionIdx,1);
             },
             function(error) {
-              alert("Could not delete session: ", error);
+              this.error = { heading: "Error deleting session!", message: error.toString() };
             }
           );
         }
@@ -136,7 +140,7 @@ export default {
           $("#startPractice").modal('hide');
         },
         function(error) {
-          alert("Could not create session: ", error);
+          this.error = { heading: "Error starting session!", message: error.toString() };
         }
       );
       return false;
@@ -146,6 +150,7 @@ export default {
     Axios.get('/sessions.json').then( response => {
       this.sessions = response.data.sessions;
     }, error => {
+      this.error = { heading: "Error loading page!", message: error.toString() };
     });
   }
 }

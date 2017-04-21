@@ -12,6 +12,7 @@ import Chords from './components/chords.vue'
 import Sessions from './components/sessions.vue'
 import Practice from './components/practice.vue'
 import FretBoard from './components/fret-board.vue'
+import Error from './components/error.vue'
 
 // ROUTES
 const routes = [
@@ -29,6 +30,7 @@ Axios.defaults.headers.common['X-CSRF-Token'] = document.querySelector('meta[nam
 
 // Register child components
 Vue.component('fret-board', FretBoard);
+Vue.component('error', Error);
 
 // GLOBAL COMPONENT
 const app = new Vue({

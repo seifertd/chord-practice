@@ -1,6 +1,9 @@
 <template>
   <div class="container">
     <div class="row mt-1">
+      <error :error="error"/>
+    </div>
+    <div class="row mt-1">
       <div class="col-12">
         <div class="card chord-list library">
           <h6 class="card-header">Chord Library</h6>
@@ -70,7 +73,8 @@
    data() {
      return {
        allChords: [],
-       myChords: []
+       myChords: [],
+       error: null
      }
    },
    methods: {
@@ -103,6 +107,7 @@
          return deleteChord(this.allChords, chordName);
        });
      }, error => {
+       this.error = { heading: "Error loading!", message: "Could not load the chords from the chord library: " + error }
      });
    }
  }
