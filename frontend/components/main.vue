@@ -7,10 +7,10 @@
     <a class="navbar-brand chord-practice-brand" href="/"></a>
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav">
-        <router-link to="/" exact tag="li" active-class="active" class="nav-item">
+        <router-link to="/chord-practice" exact tag="li" active-class="active" class="nav-item">
           <a class="nav-link">Chords</a>
         </router-link>
-        <router-link to="/sessions" tag="li" active-class="active" class="nav-item">
+        <router-link to="/chord-practice/sessions" tag="li" active-class="active" class="nav-item">
           <a class="nav-link">Sessions</a>
         </router-link>
       </ul>
