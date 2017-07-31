@@ -16,9 +16,9 @@ import Error from './components/error.vue'
 
 // ROUTES
 const routes = [
-  { path: `/chord-practice`, component: Chords },
-  { path: `/chord-practice/sessions/:id`, component: Practice },
-  { path: `/chord-practice/sessions`, component: Sessions }
+  { path: `/`, component: Chords },
+  { path: `/sessions/:id`, component: Practice },
+  { path: `/sessions`, component: Sessions }
 ];
 const router = new VueRouter({
   mode: 'history',
@@ -27,7 +27,6 @@ const router = new VueRouter({
 
 // Add Rails' CSRF token header to requests
 Axios.defaults.headers.common['X-CSRF-Token'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-Axios.defaults.baseURL = "/chord-practice";
 
 // Register child components
 Vue.component('fret-board', FretBoard);
