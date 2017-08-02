@@ -28,7 +28,7 @@ set :scm_verbose, true
 # set :pty, true
 
 # Default value for :linked_files is []
-# append :linked_files, "config/database.yml", "config/secrets.yml"
+append :linked_files, "config/database.yml", "config/secrets.yml"
 
 # Default value for linked_dirs is []
 append :linked_dirs, "log", "tmp/pids", "tmp/cache", "tmp/sockets", "public/system"
@@ -46,3 +46,17 @@ set :passenger_restart_with_touch, true
 # RVM settings
 set :rvm_ruby_version, 'ruby-2.4.1@chord-practice'
 set :rvm_type, :local
+
+namespace :deploy do
+  namespace :assets do
+    task :precompile do
+      on roles(:app) do
+        within "#{current_path}" do
+          with rails_env: "#{fetch(:stage)}" do
+            execute :rake, "assets:precompile"
+          end
+        end
+      end
+    end
+  end
+end
