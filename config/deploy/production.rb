@@ -3,7 +3,7 @@
 # Defines a single server with a list of roles and multiple properties.
 # You can define all roles on a single server, or split them:
 
-server "ps587522.dreamhostps.com", user: "das67", roles: %w{app}
+server "ps587522.dreamhostps.com", user: "das67", roles: %w{app web db}
 # server "example.com", user: "deploy", roles: %w{app web}, other_property: :other_value
 # server "db.example.com", user: "deploy", roles: %w{db}
 

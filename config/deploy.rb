@@ -47,16 +47,16 @@ set :passenger_restart_with_touch, true
 set :rvm_ruby_version, 'ruby-2.4.1@chord-practice'
 set :rvm_type, :local
 
-namespace :deploy do
-  namespace :assets do
-    task :precompile do
-      on roles(:app) do
-        within "#{current_path}" do
-          with rails_env: "#{fetch(:stage)}" do
-            execute :rake, "assets:precompile"
-          end
-        end
-      end
-    end
-  end
-end
+#namespace :deploy do
+#  namespace :assets do
+#    task :precompile do
+#      on roles(:app) do
+#        within "#{current_path}" do
+#          with rails_env: "#{fetch(:stage)}" do
+#            execute :rake, "assets:precompile"
+#          end
+#        end
+#      end
+#    end
+#  end
+#end
