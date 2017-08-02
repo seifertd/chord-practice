@@ -3,12 +3,19 @@ lock "3.8.1"
 
 set :application, "chord-practice"
 set :repo_url, "git@github.com:seifertd/chord-practice.git"
+set :user, "das67"
+set :tmp_dir, "/home/das67/tmp"
 
 # Default branch is :master
 # ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
 
 # Default deploy_to directory is /var/www/my_app_name
-set :deploy_to, "/opt/chord-practice"
+set :deploy_to, "/home/das67/repos/chord-practice"
+
+set :deploy_via, :remote_cache
+set :copy_exlude, [ '.git' ]
+set :use_sudo, false
+set :scm_verbose, true
 
 # Default value for :format is :airbrussh.
 # set :format, :airbrussh
@@ -37,7 +44,5 @@ append :linked_dirs, "log", "tmp/pids", "tmp/cache", "tmp/sockets", "public/syst
 set :passenger_restart_with_touch, true
 
 # RVM settings
-set :bundle_dir, ''
-set :bundle_flags, '--system --quiet'
 set :rvm_ruby_version, 'ruby-2.4.1@chord-practice'
-set :rvm_type, :system
+set :rvm_type, :local
