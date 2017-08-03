@@ -8,6 +8,7 @@ Vue.use(VueRouter)
 
 // COMPONENTS
 import Main from './components/main.vue'
+import Home from './components/home.vue'
 import Chords from './components/chords.vue'
 import Sessions from './components/sessions.vue'
 import Practice from './components/practice.vue'
@@ -16,7 +17,8 @@ import Error from './components/error.vue'
 
 // ROUTES
 const routes = [
-  { path: `/`, component: Chords },
+  { path: `/`, component: Home },
+  { path: `/chords`, component: Chords },
   { path: `/sessions/:id`, component: Practice },
   { path: `/sessions`, component: Sessions }
 ];

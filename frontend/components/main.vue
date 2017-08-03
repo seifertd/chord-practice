@@ -8,6 +8,9 @@
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav">
         <router-link to="/" exact tag="li" active-class="active" class="nav-item">
+          <a class="nav-link">Home</a>
+        </router-link>
+        <router-link to="/chords" exact tag="li" active-class="active" class="nav-item">
           <a class="nav-link">Chords</a>
         </router-link>
         <router-link to="/sessions" tag="li" active-class="active" class="nav-item">
