@@ -14,7 +14,7 @@
           <a class="nav-link">Chords</a>
         </router-link>
         <router-link to="/sessions" tag="li" active-class="active" class="nav-item">
-          <a class="nav-link">Sessions</a>
+          <a class="nav-link">Practice</a>
         </router-link>
       </ul>
     </div>
