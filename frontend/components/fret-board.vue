@@ -73,46 +73,41 @@
     },
     methods: {
       draw: (el, fretBoard) => {
-        el.querySelector(".image").innerHTML = "";
-        bonsai.run(el.querySelector(".image"), {
-          code: () => {
-            let fretBoardOptions = stage.options.fretBoard;
-            let fretBoard = new Rect(fretBoardOptions.left, fretBoardOptions.top,
-                fretBoardOptions.width, fretBoardOptions.height).stroke('#000', fretBoardOptions.stroke).addTo(stage);
-            let stringPos = fretBoardOptions.stringGap;
-            let fretPos = fretBoardOptions.fretGap;
-            for (let i = 1; i < (fretBoardOptions.numStrings - 1); ++i ) {
-              fretBoard.moveTo(stringPos,0).lineTo(stringPos, fretBoardOptions.height);
-              fretBoard.moveTo(0, fretPos).lineTo(fretBoardOptions.width, fretPos);
-              stringPos += fretBoardOptions.stringGap;
-              fretPos += fretBoardOptions.fretGap;
+        let canvas = el.querySelector(".image")
+        canvas.innerHTML = "";
+        let drawing = SVG(canvas).size(fretBoard.width + fretBoard.left + 4, fretBoard.height + fretBoard.top + 4);
+        let board = drawing.rect(fretBoard.width, fretBoard.height).x(fretBoard.left).y(fretBoard.top).
+          fill('white').stroke({width: 2});
+        let stringPos = fretBoard.stringGap;
+        let fretPos = fretBoard.fretGap;
+        for (let i = 1; i < (fretBoard.numStrings - 1); ++i) {
+          drawing.line(stringPos + fretBoard.left, 0 + fretBoard.top, stringPos + fretBoard.left, fretBoard.height + fretBoard.top).stroke({width: 1});
+          drawing.line(0 + fretBoard.left, fretPos + fretBoard.top, fretBoard.width + fretBoard.left, fretPos + fretBoard.top).stroke({width: 1});
+          stringPos += fretBoard.stringGap;
+          fretPos += fretBoard.fretGap;
+        }
+        if (fretBoard.chord) {
+          let string = 6;
+          let bar = null;
+          if (fretBoard.chord.notes.length > 6) {
+            bar = fretBoard.chord.notes[6];
+          }
+          for (let string = 6; string > 0; --string) {
+            let stringIdx = fretBoard.numStrings - string;
+            let fret = fretBoard.chord.notes[stringIdx];
+            stringPos = fretBoard.stringGap * stringIdx;
+            fretPos = fretBoard.fretGap * fret;
+            if (fret >= 0) {
+              let fill = fret == 0 ? "white" : "black";
+              let circle = drawing.circle(fretBoard.noteRadius*2).x(fretBoard.left + fretBoard.stringGap * stringIdx - fretBoard.noteRadius).
+                y(fretBoard.top - fretBoard.noteRadius * 3 + fretBoard.fretGap * fret).
+                stroke({width: 1}).fill(fill);
+            } else {
+              drawing.text("x").x(fretBoard.left + fretBoard.stringGap * stringIdx - fretBoard.noteRadius).
+                y(fretBoard.top + 2 + fretBoard.fretGap * fret).font({size: fretBoard.noteRadius * 4});
             }
-            fretBoard.addTo(stage);
-
-            if (fretBoardOptions.chord) {
-              let string = 6;
-              for (let string = 6; string > 0; --string) {
-                let fret = fretBoardOptions.chord.notes[fretBoardOptions.numStrings - string];
-                stringPos = fretBoardOptions.stringGap * (fretBoardOptions.numStrings - string);
-                fretPos = fretBoardOptions.fretGap * fret;
-     
-                if (fret >= 0) {
-                  let circle = new Circle(fretBoardOptions.left + fretBoardOptions.stringGap * (fretBoardOptions.numStrings - string),
-                    (fretBoardOptions.top - fretBoardOptions.noteRadius*2) + fretBoardOptions.fretGap * fret, fretBoardOptions.noteRadius).stroke('#000', 1)
-                  if (fret > 0) {
-                    circle.fill('black');
-                  }
-                  circle.addTo(stage);
-                } else {
-                  new Text('x').attr({fontSize: fretBoardOptions.noteRadius * 4, x: fretBoardOptions.left - fretBoardOptions.noteRadius + fretBoardOptions.stringGap * (fretBoardOptions.numStrings - string), y: (fretBoardOptions.top - fretBoardOptions.noteRadius*3.8)}).addTo(stage);
-                }
-              }
-            }
-          },
-          fretBoard: fretBoard,
-          height: fretBoard.height + fretBoard.top + 10,
-          width: fretBoard.width + fretBoard.left + 10
-        });
+          }
+        }
       }
     }
   }
