@@ -75,7 +75,7 @@
       draw: (el, fretBoard) => {
         let canvas = el.querySelector(".image")
         canvas.innerHTML = "";
-        let drawing = SVG(canvas).size(fretBoard.width + fretBoard.left + 4, fretBoard.height + fretBoard.top + 4);
+        let drawing = SVG(canvas).size(fretBoard.width + fretBoard.left * 3, fretBoard.height + fretBoard.top * 3);
         let board = drawing.rect(fretBoard.width, fretBoard.height).x(fretBoard.left).y(fretBoard.top).
           fill('white').stroke({width: 2});
         let stringPos = fretBoard.stringGap;
@@ -100,10 +100,10 @@
             if (fret >= 0) {
               let fill = fret == 0 ? "white" : "black";
               let circle = drawing.circle(fretBoard.noteRadius*2).x(fretBoard.left + fretBoard.stringGap * stringIdx - fretBoard.noteRadius).
-                y(fretBoard.top - fretBoard.noteRadius * 3 + fretBoard.fretGap * fret).
+                y(fretBoard.top - fretBoard.noteRadius * 3.4 + fretBoard.fretGap * fret).
                 stroke({width: 1}).fill(fill);
             } else {
-              drawing.text("x").x(fretBoard.left + fretBoard.stringGap * stringIdx - fretBoard.noteRadius).
+              drawing.text("x").x(fretBoard.left * 1.2 + fretBoard.stringGap * stringIdx - fretBoard.noteRadius).
                 y(fretBoard.top + 2 + fretBoard.fretGap * fret).font({size: fretBoard.noteRadius * 4});
             }
           }
