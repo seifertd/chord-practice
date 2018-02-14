@@ -12,7 +12,7 @@
   "dependencies": {
     "axios": "^0.15.3",
     "date-fns": "^1.28.1",
-    "vue": "^2.2.5",
+    "vue": "^2.5.13",
     "vue-router": "^2.3.0",
     "vueify": "^9.4.1"
   },
@@ -28,7 +28,7 @@
     "npm-run-all": "^2.1.2",
     "uglify-js": "^2.5.0",
     "vueify": "^9.1.0",
-    "watchify": "^3.4.0"
+    "watchify": "^3.10.0"
   },
   "browserify": {
     "transform": [

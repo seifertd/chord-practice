@@ -1,6 +1,6 @@
 .blockquote {
     font-style: italic;
-    color: $gray-light;
+    color: $gray-600;
     font-size: 0.75rem;
 }
 
@@ -9,7 +9,7 @@ header.masthead {
   // NOTE: Background images are set within the HTML using inline CSS!
   margin-bottom: 50px;
   background: no-repeat center center;
-  background-color: $gray-light;
+  background-color: $gray-300;
   background-attachment: scroll;
   -webkit-background-size: cover;
   -moz-background-size: cover;
@@ -18,11 +18,8 @@ header.masthead {
   .site-heading,
   .post-heading,
   .page-heading {
-    padding: 100px 0 50px;
+    padding: 50px 0 50px;
     color: white;
-    @media only screen and (min-width: 768px) {
-      padding: 150px 0;
-    }
   }
   .site-heading,
   .page-heading {
