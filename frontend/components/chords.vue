@@ -34,14 +34,6 @@
         </div>
       </div>
     </div>
-    <div class="row">
-      <div class="col-12">
-        Other stuff here ...
-      </div>
-    </div>
-    <div class="row">
-      <div class="footer">Footer</div>
-    </div>
   </div>
 </template>
 <script>
