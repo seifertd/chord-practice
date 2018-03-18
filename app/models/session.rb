@@ -10,10 +10,15 @@ class Session < ApplicationRecord
     pairs.all?(&:complete)
   end
 
-  def generate_random_pairs(number_of_pairs, chords = Chord.all)
+  def generate_random_pairs(number_of_pairs, options = {})
+    chords = options[:chords] || Chord.all
+    switches = options[:switches]
     chord_combos = chords.sort_by(&:name).combination(2).to_a
     chord_combos.sample(number_of_pairs).each do |chord|
-      self.pairs.build(first: chord[0].name, second: chord[1].name, switches: (5 + Random.rand(100)))
+      num_switches = if switches == :random
+        5 + Random.rand(100)
+      end
+      self.pairs.build(first: chord[0].name, second: chord[1].name, switches: num_switches)
     end
     self.pairs
   end

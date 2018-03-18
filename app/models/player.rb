@@ -20,10 +20,7 @@ class Player < ApplicationRecord
     number_of_pairs, created_at, chords = options.values_at(:number_of_pairs, :created_at, :chords)
     session = self.sessions.create do |s|
       s.created_at = created_at
-      s.generate_random_pairs(number_of_pairs, chords)
-    end
-    session.pairs.each do |pair|
-      pair.switches = 20 + Random.rand(50)
+      s.generate_random_pairs(number_of_pairs, chords: chords, switches: :random)
     end
   end
 end

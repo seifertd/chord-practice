@@ -1,7 +1,7 @@
 class SessionsController < ApplicationController
   before_action :get_session, only: [:show, :destroy, :update]
   def index
-    @sessions = current_player.sessions
+    @sessions = current_player.sessions.order(created_at: :desc)
   end
 
   def show
@@ -15,7 +15,7 @@ class SessionsController < ApplicationController
   def create
     request.format = :json
     @session = current_player.sessions.create!(session_params.merge(complete: false))
-    @session.generate_random_pairs(params[:session][:numberOfSwitches], current_player.chords.map{|name| Chord.all.find{|chord| chord.name == name} })
+    @session.generate_random_pairs(params[:session][:numberOfSwitches], chords: current_player.chords.map{|name| Chord.all.find{|chord| chord.name == name} })
     @session.save!
   end
 
@@ -30,6 +30,7 @@ class SessionsController < ApplicationController
       logger.debug("   -> Pair #{idx} number of switches: #{new_pair['switches']}")
       old_pair.save
     end
+    @session.complete = @session.done
     @session.save
   end
 

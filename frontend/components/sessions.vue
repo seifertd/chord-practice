@@ -61,12 +61,13 @@
           </thead>
           <tbody>
             <tr v-for="session in sessions" :data-session-id="session.id">
-              <td>{{format(session.createdAt, 'YYYY-MM-DD')}}</td>
+              <td>{{format(session.createdAt, 'YYYY-MM-DD HH:MM')}}</td>
               <td>{{session.pairs.length}}</td>
               <td>{{session.duration}}</td>
               <td>
                 <div class="btn-group" role="group" aria-label="Actions">
-                  <button type="button" class="btn btn-primary btn-sm" v-if="!session.done" @click="openSession">Start</button>
+                  <button type="button" class="btn btn-success btn-sm" v-if="!session.complete" @click="openSession">Start</button>
+                  <button type="button" class="btn btn-primary btn-sm" v-if="session.complete" @click="openSession">View</button>
                   <button type="button" class="btn btn-danger btn-sm" @click="deleteSession">Delete</button>
                 </div>
               </td>
@@ -135,7 +136,7 @@ export default {
       var mySessions = this.sessions;
       Axios.post('/sessions', {session: this.newSession, format: 'json'}).then(
         function(response) {
-          mySessions.push(response.data.session);
+          mySessions.unshift(response.data.session);
           $("#startPractice").modal('hide');
         },
         function(error) {
