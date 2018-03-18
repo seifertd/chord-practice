@@ -1,12 +1,12 @@
 class Pair < ApplicationRecord
   belongs_to :session
   def complete
-    switches?
+    switches && switches > 0
   end
   def first_chord
-    Chord.all.find {|chord| chord.name == first}
+    @fc ||= Chord.all.find {|chord| chord.name == first}
   end
   def second_chord
-    Chord.all.find {|chord| chord.name == second}
+    @sc ||= Chord.all.find {|chord| chord.name == second}
   end
 end

@@ -40,7 +40,7 @@
   </div>
   <div class="row mt-1">
     <div class="col-12">
-      <p class="p-0 m-0"><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#startPractice"><i class="fa fa-plus" aria-hidden="true"></i> Start</button></p>
+      <p class="p-0 m-0"><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#startPractice"><i class="fa fa-plus" aria-hidden="true"></i> Start New</button></p>
     </div>
   </div>
   <div class="row mt-1">
@@ -61,18 +61,13 @@
           </thead>
           <tbody>
             <tr v-for="session in sessions" :data-session-id="session.id">
-              <td>{{format(session.createdAt, 'YYYY-MM-DD HH:MM')}}</td>
+              <td>{{format(session.createdAt, 'YYYY-MM-DD')}}</td>
               <td>{{session.pairs.length}}</td>
               <td>{{session.duration}}</td>
               <td>
-                <div class="btn-group">
-                  <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Action
-                  </button>
-                  <div class="dropdown-menu dropdown-menu-right m-0 p-0">
-                    <a class="dropdown-item m-1 p-0 h-25 text-primary" v-if="!session.complete" :href="'/sessions/' + session.id">Start</a>
-                    <a class="dropdown-item m-1 p-0 h-25 text-danger" @click="deleteSession">Delete</a>
-                  </div>
+                <div class="btn-group" role="group" aria-label="Actions">
+                  <button type="button" class="btn btn-primary btn-sm" v-if="!session.done" @click="openSession">Start</button>
+                  <button type="button" class="btn btn-danger btn-sm" @click="deleteSession">Delete</button>
                 </div>
               </td>
             </tr>
@@ -131,6 +126,10 @@ export default {
         }
       }
       return false;
+    },
+    openSession: function(event) {
+      let sessionId = $(event.target).closest("tr")[0].dataset.sessionId;
+      window.location.href ="/sessions/" + sessionId;
     },
     startSession: function(event) {
       var mySessions = this.sessions;
