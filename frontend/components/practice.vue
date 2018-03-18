@@ -7,7 +7,7 @@
       </div>
       <div v-else class="card">
         <h6 class="card-header text-center">Date: {{format(session.createdAt, 'YYYY-MM-DD HH:MM')}}, Pairs Left: {{pairsLeft()}}</h6>
-        <div class="card-block text-center carousel slide" id="practiceSession" data-ride="carousel" data-pause="true" data-interval="false">
+        <div class="card-block text-center carousel slide" id="practiceSession" data-ride="carousel" data-pause="true" data-wrap="false" data-interval="false">
           <div class="carousel-inner" role="listbox">
             <div class="carousel-item" v-for="(pair, idx) in session.pairs" :class="idx == 0 ? 'active' : ''">
               <div class="container-fluid align-items-center">
@@ -17,6 +17,9 @@
                   </div>
                   <div class="col-2">
                     <i class="fa fa-exchange" style="font-size: 40px" aria-hidden="true"></i>
+                    <p v-if="pair.complete">
+                      Number of switches {{pair.switches}}
+                    </p>
                   </div>
                   <div class="col-5">
                     <fret-board :boardSize="boardSize" :chord="pair.secondChord"></fret-board>
@@ -24,6 +27,14 @@
                 </div>
               </div>
             </div>
+            <a class="carousel-control-prev" href="#practiceSession" role="button" data-slide="prev" v-if="session.complete">
+              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+              <span class="sr-only">Previous</span>
+            </a>
+            <a class="carousel-control-next" href="#practiceSession" role="button" data-slide="next" v-if="session.complete">
+              <span class="carousel-control-next-icon" aria-hidden="false"></span>
+              <span class="sr-only">Next</span>
+            </a>
           </div>
         </div>
         <div class="card-footer">
@@ -59,6 +70,15 @@ import Axios from 'axios'
 import format from 'date-fns/format'
 
 const DEFAULT_COUNTDOWN = 10;
+
+const getSessionState = (session) => {
+  if (session.started && !session.complete) {
+    return "Running";
+  } else if (session.complete) {
+    return "Complete";
+  }
+  return "Ready";
+};
 
 export default {
   data() {
@@ -130,7 +150,10 @@ export default {
   beforeRouteEnter (to, from, next) {
     Axios.get(`/sessions/${to.params.id}.json`).then(
       function(response) {
-        next(vm => { vm.session = response.data.session; });
+        next(vm => {
+          vm.session = response.data.session;
+          vm.state = getSessionState(vm.session);
+        });
       },
       function(err) {
         alert("Could not load practice: ", err);
@@ -144,13 +167,7 @@ export default {
       Axios.get(`/sessions/${this.$route.params.id}.json`).then(
         function(response) {
           this.session = response.data.session;
-          if (this.session.started) {
-            this.state = "Running";
-          } else if (this.session.complete) {
-            this.state = "Complete";
-          } else {
-            this.state = "Ready";
-          }
+          this.state = getSessionState(this.session);
         },
         function(err) {
           alert("Could not load practice: ", err);

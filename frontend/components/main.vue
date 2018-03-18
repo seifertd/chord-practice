@@ -16,6 +16,9 @@
         <router-link to="/sessions" tag="li" active-class="active" class="nav-item">
           <a class="nav-link">Practice</a>
         </router-link>
+        <router-link to="/progress" tag="li" active-class="active" class="nav-item">
+          <a class="nav-link">Progress</a>
+        </router-link>
       </ul>
     </div>
   </nav>
