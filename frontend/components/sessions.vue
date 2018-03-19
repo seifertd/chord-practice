@@ -38,7 +38,7 @@
       </div>
     </div>
   </div>
-  <div class="row mt-1">
+  <div class="row mt-1" v-if="player && player.chords && player.chords.length > 1">
     <div class="col-12">
       <p class="p-0 m-0"><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#startPractice"><i class="fa fa-plus" aria-hidden="true"></i> Start New</button></p>
     </div>
@@ -75,7 +75,12 @@
           </tbody>
         </table>
         <div class="card-block" v-else-if="!error">
-          <div class="alert alert-info"><strong>Hey!</strong> You have no practice sessions yet. Why not <a href="#" data-toggle="modal" data-target="#startPractice" class="alert-link">start one?</a></div>
+          <div v-if="player && player.chords && player.chords.length > 1">
+            <div class="alert alert-info"><strong>Hey!</strong> You have no practice sessions yet. Why not <a href="#" data-toggle="modal" data-target="#startPractice" class="alert-link">start one?</a></div>
+          </div>
+          <div v-else>
+            <div class="alert alert-info"><strong>Hey!</strong> You haven't learned enough chords yet? Why not <a href="/chords" class="alert-link">tell us about your chords?</a></div>
+          </div>
         </div>
       </div>
     </div>
@@ -90,6 +95,7 @@ export default {
   data() {
     return {
       sessions: [],
+      player: null,
       newSession: {
         numberOfSwitches: 10,
         duration: 1
