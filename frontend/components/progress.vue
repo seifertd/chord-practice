@@ -7,14 +7,14 @@
           <div class="card-block" v-if="error">
             <error :error="error" />
           </div>
-          <div class="card-block" v-if="hasData">
-            <canvas id="progressChart"></canvas>
-          </div>
-          <div class="card-block" v-else-if="player && player.chords && player.chords.length > 1">
+          <div class="card-block" v-if="!hasData && player && player.chords && player.chords.length > 1">
             <div class="alert alert-info"><strong>Hey!</strong> You have no practice sessions yet. Why not <a href="#" class="alert-link">start one?</a></div>
           </div>
-          <div class="card-block" v-else>
+          <div class="card-block" v-else-if="!hasData">
             <div class="alert alert-info"><strong>Hey!</strong> You haven't learned enough chords yet? Why not <a href="/chords" class="alert-link">tell us about your chords?</a></div>
+          </div>
+          <div class="card-block">
+            <canvas id="progressChart"></canvas>
           </div>
         </div>
       </div>
@@ -42,18 +42,18 @@ export default {
   },
   created() {
     Axios.get('/progress.json').then( response => {
+      this.player = response.data.player;
       const chartConfig = response.data.progress;
-      let index = 0;
       if (chartConfig.data.datasets && chartConfig.data.datasets.length > 0) {
+        let index = 0;
         chartConfig.data.datasets.forEach(dataSet => {
           dataSet.borderColor = getColor(index, 1.0);
           dataSet.backgroundColor = getColor(index, 0.3);
           index++;
         });
+        const chart = new Chart("progressChart", chartConfig);
         this.hasData = true;
       }
-      this.player = response.data.player;
-      const chart = new Chart("progressChart", chartConfig);
     }, error => {
       this.error = { heading: "Error loading page!", message: error.toString() };
     });

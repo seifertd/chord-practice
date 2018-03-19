@@ -108,7 +108,7 @@ export default {
       return this.sessions && this.sessions.length > 0;
     },
     availableSwitches: function() {
-      return [10,5,6,7,8,9,10,11,12,13,14,15];
+      return [10,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15];
     },
     availableDurations: function() {
       return [1,2,3];
@@ -155,6 +155,7 @@ export default {
   created() {
     Axios.get('/sessions.json').then( response => {
       this.sessions = response.data.sessions;
+      this.player = response.data.player;
     }, error => {
       this.error = { heading: "Error loading page!", message: error.toString() };
     });
