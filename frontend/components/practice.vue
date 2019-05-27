@@ -18,7 +18,7 @@
                   <div class="col-2">
                     <i class="fa fa-exchange" style="font-size: 40px" aria-hidden="true"></i>
                     <p v-if="pair.complete">
-                      Number of switches {{pair.switches}}
+                    {{pair.switches}}
                     </p>
                   </div>
                   <div class="col-5">
