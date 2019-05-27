@@ -4,7 +4,7 @@
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">Start a Practice</h5>
+          <h5 class="modal-title">Create a Practice Session</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -32,7 +32,7 @@
           </form>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-primary" @click="startSession">Start</button>
+          <button type="button" class="btn btn-primary" @click="startSession">Create</button>
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
         </div>
       </div>
@@ -40,7 +40,7 @@
   </div>
   <div class="row mt-1" v-if="player && player.chords && player.chords.length > 1">
     <div class="col-12">
-      <p class="p-0 m-0"><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#startPractice"><i class="fa fa-plus" aria-hidden="true"></i> Start New</button></p>
+      <p class="p-0 m-0"><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#startPractice"><i class="fa fa-plus" aria-hidden="true"></i> Create New</button></p>
     </div>
   </div>
   <div class="row mt-1">
