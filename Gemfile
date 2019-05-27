@@ -22,7 +22,7 @@ gem 'uglifier', '>= 1.3.0'
 gem 'jbuilder', '~> 2.5'
 
 # Bootstrap
-gem 'bootstrap', '~> 4.0.0.alpha6'
+gem 'bootstrap', '>= 4.3.1'
 
 # Use Redis adapter to run Action Cable in production
 # gem 'redis', '~> 3.0'
