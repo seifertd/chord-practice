@@ -69,7 +69,7 @@
 import Axios from 'axios'
 import format from 'date-fns/format'
 
-const DEFAULT_COUNTDOWN = 10;
+const DEFAULT_COUNTDOWN = 5;
 
 const getSessionState = (session) => {
   if (session.started && !session.complete) {
@@ -153,6 +153,7 @@ export default {
         next(vm => {
           vm.session = response.data.session;
           vm.state = getSessionState(vm.session);
+          vm.startSwitching();
         });
       },
       function(err) {
@@ -168,6 +169,7 @@ export default {
         function(response) {
           this.session = response.data.session;
           this.state = getSessionState(this.session);
+          this.startSwitching();
         },
         function(err) {
           alert("Could not load practice: ", err);
