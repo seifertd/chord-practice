@@ -13,6 +13,7 @@
 
 # generated public assets
 /public/assets/*
+public/assets/*
 
 # Ignore all logfiles and tempfiles.
 /log/*
@@ -29,3 +30,6 @@ npm-debug.log
 
 # Ignore compiled JS files
 app/assets/javascripts/application.js
+
+# Ignore master key for decrypting credentials and more.
+/config/master.key

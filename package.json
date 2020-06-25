@@ -30,7 +30,6 @@
     "http-server": "^0.12.3",
     "npm-run-all": "^2.1.2",
     "uglify-js": "^2.5.0",
-    "vueify": "^9.1.0",
     "watchify": "^3.11.1"
   },
   "browserify": {
