@@ -153,7 +153,9 @@ export default {
         next(vm => {
           vm.session = response.data.session;
           vm.state = getSessionState(vm.session);
-          vm.startSwitching();
+          if (vm.state !== 'Complete') {
+            vm.startSwitching();
+          }
         });
       },
       function(err) {

@@ -33,6 +33,7 @@ class Player < ApplicationRecord
     session = self.sessions.create do |s|
       s.created_at = created_at
       s.generate_random_pairs(number_of_pairs, chords: chords, switches: :random)
+      s.completed = true
     end
   end
 end
