@@ -124,7 +124,8 @@ GEM
       mini_portile2 (~> 2.5.0)
       racc (~> 1.4)
     popper_js (1.16.0)
-    puma (3.12.6)
+    puma (4.3.12)
+      nio4r (~> 2.0)
     racc (1.5.2)
     rack (2.2.3)
     rack-proxy (0.6.5)
@@ -227,7 +228,7 @@ DEPENDENCIES
   foreman
   jbuilder (~> 2.5)
   listen (~> 3.0.5)
-  puma (~> 3.12)
+  puma (~> 4.3)
   rails (~> 6)
   rvm1-capistrano3
   sassc
