@@ -27,7 +27,7 @@
     "browserify": "^16.5.1",
     "browserify-hmr": "^0.4.1",
     "cross-env": "^1.0.6",
-    "envify": "^3.4.1",
+    "envify": "^4.1.0",
     "http-server": "^0.12.3",
     "npm-run-all": "^2.1.2",
     "uglify-js": "^2.5.0",
