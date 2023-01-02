@@ -10,7 +10,7 @@
     "clean": "rm -rf node_modules"
   },
   "dependencies": {
-    "@rails/webpacker": "5.2.1",
+    "@rails/webpacker": "5.4.3",
     "axios": "^0.21.2",
     "chart.js": "^2.9.3",
     "date-fns": "^1.30.1",
