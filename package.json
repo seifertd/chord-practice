@@ -23,7 +23,7 @@
   "devDependencies": {
     "@babel/cli": "^7.22.15",
     "@babel/core": "^7.22.10",
-    "@babel/preset-env": "^7.22.10",
+    "@babel/preset-env": "^7.22.20",
     "babelify": "^10.0.0",
     "browserify": "^16.5.1",
     "browserify-hmr": "^0.4.1",
