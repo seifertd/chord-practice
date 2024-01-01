@@ -15,7 +15,7 @@
     "chart.js": "^4.4.1",
     "date-fns": "^2.30.0",
     "js-yaml": "^4.1.0",
-    "vue": "^3.3.11",
+    "vue": "^3.4.3",
     "vue-router": "^4.2.5",
     "vue-template-compiler": "^2.7.15",
     "vueify": "^9.4.1"
