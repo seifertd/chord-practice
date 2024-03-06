@@ -16,7 +16,7 @@
     "date-fns": "^3.3.1",
     "js-yaml": "^4.1.0",
     "vue": "^3.4.15",
-    "vue-router": "^4.2.5",
+    "vue-router": "^4.3.0",
     "vue-template-compiler": "^2.7.16",
     "vueify": "^9.4.1"
   },
