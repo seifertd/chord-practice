@@ -7,6 +7,9 @@
 # Ignore bundler config.
 /.bundle
 
+# Ignore webpack dist dir
+/dist
+
 # Ignore the default SQLite database.
 /db/*.sqlite3
 /db/*.sqlite3-journal
