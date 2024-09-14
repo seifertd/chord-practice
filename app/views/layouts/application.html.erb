@@ -1,23 +1,48 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
-    <title><%= content_for(:title) || "Chord Practice" %></title>
+    <title>Chord Practice - An Application to Help Budding Guitarists Develop Chord Switching Speed and Accuracy</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="description" content="A website to help learning guitar players to develop faster and more accurate chord switching using an online application.">
+    <meta name="keywords" content="guitar,chord,chord switching,practice">
+    <%= stylesheet_link_tag "tailwind", "inter-font", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag 'application', media: 'all' %>
     <%= csrf_meta_tags %>
-    <%= csp_meta_tag %>
-
-    <%= yield :head %>
-
-    <link rel="manifest" href="/manifest.json">
-    <link rel="icon" href="/icon.png" type="image/png">
-    <link rel="icon" href="/icon.svg" type="image/svg+xml">
-    <link rel="apple-touch-icon" href="/icon.png">
-    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
-    <%= javascript_importmap_tags %>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/svg.js/2.6.3/svg.min.js"></script>
   </head>
-
   <body>
-    <%= yield %>
+    <header>
+      <nav class="bg-white border-gray-200 px-4 lg:px-6 py-2.5 dark:bg-gray-800">
+        <div class="flex flex-wrap items-center mx-auto max-w-screen-xl">
+          <%= link_to root_url, class: "flex items-center pr-10" do %>
+            <img src="<%= image_path 'guitar.png' %>" class="mr-3 h-6 sm:h-9" alt="Chord Practice Logo" />
+            <span class="self-center text-xl font-semibold whitespace-nowrap dark:text-white">Chord Practice</span>
+          <% end %>
+          <% [
+            ['Home', root_path],
+            ['Chords', chords_path],
+            ['Practice', sessions_path],
+            ['Progress', progress_index_path],
+          ].each do |link_text, link_path| -%>
+          <div class="flex items-center">
+            <%= link_to link_text, link_path, class: "
+            text-white bg-blue-700 hover:bg-blue-800
+            focus:ring-4 focus:ring-blue-300 font-medium
+            rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5
+            mr-2 dark:bg-blue-600 dark:hover:bg-blue-700
+            focus:outline-none dark:focus:ring-blue-800" %>
+          </div>
+        <% end %>
+        </div>
+      </nav>
+    </header>
+    <main class="container mx-lg px-5 flex">
+      <div class="max-w mx-auto">
+        <div class="min-w-full w-max" id="main-content">
+          <%= yield %>
+        </div>
+      </div>
+    </main>
+    <%= javascript_include_tag 'application' %>
   </body>
 </html>

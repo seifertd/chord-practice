@@ -1,5 +1,5 @@
 class Player < ApplicationRecord
-  serialize :chords, Array
+  serialize :chords, coder: YAML, type: Array
   has_many :sessions, dependent: :destroy
 
   def start_practice_session(options)
