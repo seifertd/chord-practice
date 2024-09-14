@@ -1,2 +1,0 @@
-browserify: npm install && npm run watchify
-rails: rails server -p 3000

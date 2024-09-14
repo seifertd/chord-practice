@@ -1,25 +1,23 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
   <head>
-    <title>Chord Practice - An Application to Help Budding Guitarists Develop Chord Switching Speed and Accuracy</title>
-    <meta name="description" content="A website to help learning guitar players to develop faster and more accurate chord switching using an online application.">
-    <meta name="keywords" content="guitar,chord,chord switching,practice">
-    <%= stylesheet_link_tag 'application', media: 'all' %>
+    <title><%= content_for(:title) || "Chord Practice" %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
     <%= csrf_meta_tags %>
-    <script src="https://cdn.polyfill.io/v2/polyfill.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/svg.js/2.6.3/svg.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
-    <script src="https://use.fontawesome.com/bedff41509.js"></script>
-    <%= stylesheet_link_tag    'application', media: 'all' %>
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink">
+    <%= csp_meta_tag %>
+
+    <%= yield :head %>
+
+    <link rel="manifest" href="/manifest.json">
+    <link rel="icon" href="/icon.png" type="image/png">
+    <link rel="icon" href="/icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/icon.png">
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
   </head>
+
   <body>
-    <div id="assets" data-brand-url="<%= image_path 'guitar.png' %>">
-    </div>
-    <div id="app">
-    </div>
-    <%= javascript_include_tag 'application' %>
+    <%= yield %>
   </body>
 </html>
