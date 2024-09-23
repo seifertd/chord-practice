@@ -16,7 +16,7 @@
         <div class="flex flex-wrap items-center mx-auto max-w-screen-xl">
           <%= link_to root_url, class: "flex items-center pr-10" do %>
             <img src="<%= image_path 'guitar.png' %>" class="mr-3 h-6 sm:h-9" alt="Chord Practice Logo" />
-            <span class="self-center text-xl font-semibold whitespace-nowrap dark:text-white">Chord Practice</span>
+            <span class="text-xl font-semibold whitespace-nowrap dark:text-white">Chord Practice</span>
           <% end %>
           <% [
             ['Home', root_path],
@@ -37,10 +37,8 @@
       </nav>
     </header>
     <main class="container mx-lg px-5 flex">
-      <div class="max-w mx-auto">
-        <div class="min-w-full w-max" id="main-content">
-          <%= yield %>
-        </div>
+      <div class="min-w-full w-max" id="main-content">
+        <%= yield %>
       </div>
     </main>
     <%= javascript_include_tag 'application' %>
