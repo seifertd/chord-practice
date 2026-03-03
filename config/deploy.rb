@@ -6,9 +6,9 @@ set :user, "doug"
 set :group, "doug"
 set :use_sudo, false
 set :tmp_dir, "/tmp"
-set :branch, ENV["BRANCH"] || "master"
+set :branch, ENV["BRANCH"] || "main"
 
-# Default branch is :master
+# Default branch is :main
 # ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
 
 
