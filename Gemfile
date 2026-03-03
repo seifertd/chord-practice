@@ -45,6 +45,10 @@ group :development, :test do
 
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
   gem "rubocop-rails-omakase", require: false
+
+  # Needed for net-ssh, capistrano
+  gem "ed25519"
+  gem "bcrypt_pbkdf"
 end
 
 group :development do
