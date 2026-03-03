@@ -22,5 +22,4 @@ class Session < ApplicationRecord
     end
     self.pairs
   end
-
 end

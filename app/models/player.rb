@@ -3,19 +3,19 @@ class Player < ApplicationRecord
   has_many :login_sessions, dependent: :destroy
   serialize :chords, coder: YAML, type: Array
   has_many :sessions, dependent: :destroy
-  normalizes :email_address, with: -> e { e.strip.downcase }
+  normalizes :email_address, with: ->(e) { e.strip.downcase }
 
   def start_practice_session(options)
     self.sessions.create(options)
   end
 
   def chord_pair_data
-    self.sessions.inject(Hash.new{|h,k| h[k] = []}) do |pairs, session|
+    self.sessions.inject(Hash.new { |h, k| h[k] = [] }) do |pairs, session|
       if !session.complete
         return pairs
       end
       session.pairs.inject(pairs) do |pairs, pair|
-        pairs["#{pair.first}-#{pair.second}"] << {x: session.created_at.iso8601, y: (pair.switches.to_f / session.duration).round(1)}
+        pairs["#{pair.first}-#{pair.second}"] << { x: session.created_at.iso8601, y: (pair.switches.to_f / session.duration).round(1) }
         pairs
       end
     end

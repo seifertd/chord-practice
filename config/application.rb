@@ -1,7 +1,7 @@
 require_relative "boot"
 
 require "rails"
-%w(
+%w[
   active_record/railtie
   action_controller/railtie
   action_view/railtie
@@ -9,7 +9,7 @@ require "rails"
   action_text/engine
   rails/test_unit/railtie
   sprockets/railtie
-).each do |railtie|
+].each do |railtie|
   begin
     require railtie
   rescue LoadError

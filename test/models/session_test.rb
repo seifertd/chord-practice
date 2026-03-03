@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 class SessionTest < ActiveSupport::TestCase
   # generate_random_pairs (existing tests)
@@ -13,7 +13,7 @@ class SessionTest < ActiveSupport::TestCase
     session = Session.new(player: players(:one))
     session.generate_random_pairs(8)
     session.save!
-    assert session.pairs.map{|pair| [pair.first, pair.second].join('-')}.uniq.size == 8
+    assert session.pairs.map { |pair| [ pair.first, pair.second ].join("-") }.uniq.size == 8
   end
 
   # generate_random_pairs (new)
@@ -22,7 +22,7 @@ class SessionTest < ActiveSupport::TestCase
     chords = Chord.all.select { |c| %w[A G D].include?(c.name) }
     session = Session.new(player: players(:one))
     session.generate_random_pairs(3, chords: chords)
-    used_names = session.pairs.flat_map { |p| [p.first, p.second] }.uniq
+    used_names = session.pairs.flat_map { |p| [ p.first, p.second ] }.uniq
     assert_empty used_names - %w[A G D]
   end
 
@@ -51,15 +51,15 @@ class SessionTest < ActiveSupport::TestCase
 
   test "started is false when all pairs have zero switches" do
     session = Session.new(player: players(:one))
-    session.pairs.build(first: 'A', second: 'G', switches: 0)
-    session.pairs.build(first: 'A', second: 'D', switches: 0)
+    session.pairs.build(first: "A", second: "G", switches: 0)
+    session.pairs.build(first: "A", second: "D", switches: 0)
     assert_not session.started
   end
 
   test "started is true when at least one pair has switches recorded" do
     session = Session.new(player: players(:one))
-    session.pairs.build(first: 'A', second: 'G', switches: 0)
-    session.pairs.build(first: 'A', second: 'D', switches: 12)
+    session.pairs.build(first: "A", second: "G", switches: 0)
+    session.pairs.build(first: "A", second: "D", switches: 12)
     assert session.started
   end
 
@@ -67,15 +67,15 @@ class SessionTest < ActiveSupport::TestCase
 
   test "done is false when some pairs have zero switches" do
     session = Session.new(player: players(:one))
-    session.pairs.build(first: 'A', second: 'G', switches: 10)
-    session.pairs.build(first: 'A', second: 'D', switches: 0)
+    session.pairs.build(first: "A", second: "G", switches: 10)
+    session.pairs.build(first: "A", second: "D", switches: 0)
     assert_not session.done
   end
 
   test "done is true when every pair has switches recorded" do
     session = Session.new(player: players(:one))
-    session.pairs.build(first: 'A', second: 'G', switches: 10)
-    session.pairs.build(first: 'A', second: 'D', switches: 5)
+    session.pairs.build(first: "A", second: "G", switches: 10)
+    session.pairs.build(first: "A", second: "D", switches: 5)
     assert session.done
   end
 end

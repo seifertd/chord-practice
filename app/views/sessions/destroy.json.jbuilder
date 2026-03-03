@@ -1,2 +1,2 @@
-json.message 'Successful'
-json.status 'OK'
+json.message "Successful"
+json.status "OK"

@@ -1,5 +1,5 @@
 class SessionsController < ApplicationController
-  before_action :get_session, only: [:show, :destroy, :update]
+  before_action :get_session, only: [ :show, :destroy, :update ]
   def index
     @sessions = current_player.sessions.includes(:pairs).order(created_at: :desc)
   end
@@ -8,7 +8,7 @@ class SessionsController < ApplicationController
     unless @session.complete
       chord_lookup = Chord.all.index_by(&:name)
       @pairs_with_chords = @session.pairs.map do |pair|
-        [pair, chord_lookup[pair.first], chord_lookup[pair.second]]
+        [ pair, chord_lookup[pair.first], chord_lookup[pair.second] ]
       end
       @start_pair_idx = @session.pairs.index { |p| !p.complete } || 0
     end
@@ -34,10 +34,10 @@ class SessionsController < ApplicationController
   def update
     request.format = :json
     logger.debug("Session #{@session.id} is complete? #{params['complete']}")
-    @session.complete = params['complete']
-    params['pairs'].each_with_index do |new_pair, idx|
-      old_pair = @session.pairs.find {|c| c.id == new_pair['id'] }
-      old_pair.switches = new_pair['switches']
+    @session.complete = params["complete"]
+    params["pairs"].each_with_index do |new_pair, idx|
+      old_pair = @session.pairs.find { |c| c.id == new_pair["id"] }
+      old_pair.switches = new_pair["switches"]
       logger.debug("   -> Pair #{idx} number of switches: #{new_pair['switches']}")
       old_pair.save
     end

@@ -1,19 +1,19 @@
 # config valid only for current version of Capistrano
-#lock "3.8.1"
+# lock "3.8.1"
 set :application, "chord-practice"
 set :repo_url, "git@github.com:seifertd/chord-practice.git"
 set :user, "doug"
 set :group, "doug"
 set :use_sudo, false
 set :tmp_dir, "/tmp"
-set :branch, ENV['BRANCH'] || 'master'
+set :branch, ENV["BRANCH"] || "master"
 
 # Default branch is :master
 # ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
 
 
 set :deploy_via, :remote_cache
-set :copy_exlude, [ '.git' ]
+set :copy_exlude, [ ".git" ]
 set :scm_verbose, true
 
 # Default value for :format is :airbrussh.
@@ -43,7 +43,7 @@ set :keep_releases, 3
 set :passenger_restart_with_touch, true
 
 # RVM settings
-set :rvm_ruby_version, 'ruby-2.6.3@chord-practice'
+set :rvm_ruby_version, "ruby-2.6.3@chord-practice"
 set :rvm_type, :system
 
 before :"deploy:assets:precompile", :"deploy:frontend", :"deploy:migrate"

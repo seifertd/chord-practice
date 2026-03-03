@@ -1,12 +1,12 @@
 Rails.application.routes.draw do
-  get 'static_pages/home'
+  get "static_pages/home"
 
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
-  resources :sessions, only: [:index, :show, :create, :destroy, :update]
-  resources :progress, only: [:index]
-  root 'static_pages#home'
-  resource :chords, only: [:show, :update]
+  resources :sessions, only: [ :index, :show, :create, :destroy, :update ]
+  resources :progress, only: [ :index ]
+  root "static_pages#home"
+  resource :chords, only: [ :show, :update ]
 
-  resource :login, only: [:new, :create, :destroy]
-  resource :registration, only: [:new, :create]
+  resource :login, only: [ :new, :create, :destroy ]
+  resource :registration, only: [ :new, :create ]
 end

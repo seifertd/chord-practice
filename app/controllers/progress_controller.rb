@@ -9,23 +9,23 @@ class ProgressController < ApplicationController
             label: chord_pair,
             data: chord_pair_data[chord_pair],
             borderWidth: 2,
-            pointRadius: 2,
+            pointRadius: 2
           }
         end
       },
       options: {
         scales: {
           x: {
-            type: 'time',
+            type: "time",
             title: {
               display: true,
-              text: 'Date'
+              text: "Date"
             }
           },
           y: {
             title: {
               display: true,
-              text: 'Switches / min'
+              text: "Switches / min"
             },
             beginAtZero: true
           }
