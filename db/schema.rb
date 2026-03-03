@@ -10,14 +10,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_03_02_000002) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_02_000002) do
   create_table "login_sessions", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "ip_address"
     t.integer "player_id", null: false
     t.string "token", null: false
-    t.string "user_agent"
-    t.string "ip_address"
-    t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "user_agent"
     t.index ["player_id"], name: "index_login_sessions_on_player_id"
     t.index ["token"], name: "index_login_sessions_on_token", unique: true
   end
@@ -25,30 +25,30 @@ ActiveRecord::Schema[7.2].define(version: 2026_03_02_000002) do
   create_table "pairs", force: :cascade do |t|
     t.string "first"
     t.string "second"
-    t.integer "switches", default: 0
     t.integer "session_id"
+    t.integer "switches", default: 0
     t.index ["session_id", "first", "second"], name: "index_pairs_on_session_id_and_first_and_second", unique: true
     t.index ["session_id"], name: "index_pairs_on_session_id"
   end
 
   create_table "players", force: :cascade do |t|
-    t.string "uuid"
-    t.string "name"
     t.text "chords", default: "--- []\n"
     t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
     t.string "email_address"
+    t.string "name"
     t.string "password_digest"
+    t.datetime "updated_at", precision: nil, null: false
+    t.string "uuid"
     t.index ["email_address"], name: "index_players_on_email_address", unique: true
     t.index ["name"], name: "index_players_on_name"
     t.index ["uuid"], name: "index_players_on_uuid", unique: true
   end
 
   create_table "sessions", force: :cascade do |t|
-    t.integer "duration", default: 1
     t.boolean "complete", default: false
-    t.integer "player_id"
     t.datetime "created_at", precision: nil, null: false
+    t.integer "duration", default: 1
+    t.integer "player_id"
     t.datetime "updated_at", precision: nil, null: false
     t.index ["player_id"], name: "index_sessions_on_player_id"
   end
