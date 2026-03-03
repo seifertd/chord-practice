@@ -1,1 +1,52 @@
-<!--show-->
+<div class="mt-6">
+  <div class="flex items-center justify-between mb-4">
+    <h2 class="text-lg font-semibold">Session — <%= @session.created_at.strftime("%Y-%m-%d %H:%M") %></h2>
+    <%= link_to "← Back", sessions_path, class: "text-sm text-blue-600 dark:text-blue-400 hover:underline" %>
+  </div>
+
+  <dl class="flex gap-6 text-sm mb-6 text-gray-600 dark:text-gray-400">
+    <div>
+      <dt class="font-medium text-gray-500 dark:text-gray-500">Duration per pair</dt>
+      <dd><%= @session.duration %> min</dd>
+    </div>
+    <div>
+      <dt class="font-medium text-gray-500 dark:text-gray-500">Chord pairs</dt>
+      <dd><%= @session.pairs.size %></dd>
+    </div>
+    <div>
+      <dt class="font-medium text-gray-500 dark:text-gray-500">Status</dt>
+      <dd>
+        <% if @session.complete %>
+          <span class="px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400">Complete</span>
+        <% else %>
+          <span class="px-2 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400">In Progress</span>
+        <% end %>
+      </dd>
+    </div>
+  </dl>
+
+  <div class="overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-700">
+    <table class="w-full text-sm text-left text-gray-700 dark:text-gray-300">
+      <thead class="text-xs uppercase bg-gray-50 dark:bg-gray-700 text-gray-600 dark:text-gray-400">
+        <tr>
+          <th class="px-4 py-3">Chord Pair</th>
+          <th class="px-4 py-3">Duration</th>
+          <th class="px-4 py-3">Switches</th>
+          <th class="px-4 py-3">Switches / min</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+        <% @session.pairs.each do |pair| %>
+          <tr class="bg-white dark:bg-gray-800">
+            <td class="px-4 py-3 font-medium"><%= pair.first %> ↔ <%= pair.second %></td>
+            <td class="px-4 py-3"><%= @session.duration %> min</td>
+            <td class="px-4 py-3"><%= pair.switches %></td>
+            <td class="px-4 py-3 text-gray-500 dark:text-gray-400">
+              <%= @session.duration > 0 ? (pair.switches.to_f / @session.duration).round(1) : "—" %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

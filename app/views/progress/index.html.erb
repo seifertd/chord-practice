@@ -1,1 +1,44 @@
-<!-- index -->
+<div class="mt-6">
+  <h2 class="text-lg font-semibold mb-4">Progress</h2>
+
+  <% if @progress[:data][:datasets].empty? %>
+    <% if @current_player.chords.length > 1 %>
+      <div class="p-4 text-sm text-blue-800 bg-blue-50 rounded-lg dark:bg-blue-900/30 dark:text-blue-300">
+        <strong>Hey!</strong> You have no practice sessions yet. Why not
+        <%= link_to "start one?", sessions_path, class: "underline hover:no-underline" %>
+      </div>
+    <% else %>
+      <div class="p-4 text-sm text-blue-800 bg-blue-50 rounded-lg dark:bg-blue-900/30 dark:text-blue-300">
+        <strong>Hey!</strong> You haven't added enough chords yet. Why not
+        <%= link_to "tell us about your chords?", chords_path, class: "underline hover:no-underline" %>
+      </div>
+    <% end %>
+  <% else %>
+    <div class="relative">
+      <canvas id="progressChart"></canvas>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+    <script>
+      (function () {
+        var PALETTE = "8dd3c7ffffb3bebadafb807280b1d3fdb462b3de69fccde5d9d9d9bc80bdccebc5ffed6f";
+        function paletteColor(i, opacity) {
+          var offset = (i % 12) * 6;
+          var hex = PALETTE.substring(offset, offset + 6);
+          var r = parseInt(hex.substring(0, 2), 16);
+          var g = parseInt(hex.substring(2, 4), 16);
+          var b = parseInt(hex.substring(4, 6), 16);
+          return "rgba(" + r + "," + g + "," + b + "," + opacity + ")";
+        }
+
+        var config = <%= raw @progress.to_json %>;
+        config.data.datasets.forEach(function (dataset, i) {
+          dataset.borderColor = paletteColor(i, 1.0);
+          dataset.backgroundColor = paletteColor(i, 0.3);
+        });
+        new Chart("progressChart", config);
+      })();
+    </script>
+  <% end %>
+</div>

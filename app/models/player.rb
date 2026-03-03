@@ -12,7 +12,7 @@ class Player < ApplicationRecord
         return pairs
       end
       session.pairs.inject(pairs) do |pairs, pair|
-        pairs["#{pair.first}-#{pair.second}"] << {t: session.created_at.iso8601, y: pair.switches}
+        pairs["#{pair.first}-#{pair.second}"] << {x: session.created_at.iso8601, y: (pair.switches.to_f / session.duration).round(1)}
         pairs
       end
     end
@@ -33,7 +33,7 @@ class Player < ApplicationRecord
     session = self.sessions.create do |s|
       s.created_at = created_at
       s.generate_random_pairs(number_of_pairs, chords: chords, switches: :random)
-      s.completed = true
+      s.complete = true
     end
   end
 end
