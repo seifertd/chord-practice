@@ -3,7 +3,7 @@
 # Defines a single server with a list of roles and multiple properties.
 # You can define all roles on a single server, or split them:
 
-server "das", user: "doug", roles: %w{app web db}
+server "das", user: "doug", roles: %w[app web db]
 
 set :deploy_to, "/home/doug/webapps/chord-practice/production"
 
@@ -54,9 +54,9 @@ set :deploy_to, "/home/doug/webapps/chord-practice/production"
 #   user: "user_name",
 #   roles: %w{web app},
 set :ssh_options, {
-#     user: "user_name", # overrides user setting above
-#     keys: %w(/home/user_name/.ssh/id_rsa),
+     #     user: "user_name", # overrides user setting above
+     #     keys: %w(/home/user_name/.ssh/id_rsa),
      forward_agent: true,
-     auth_methods: %w(publickey password)
-#     # password: "please use keys"
+     auth_methods: %w[publickey password]
+    #     # password: "please use keys"
   }

@@ -1,4 +1,4 @@
-# Chord Practice
+# Chord Practice Version 2
 
 This web applications allows people learning guitar to practice and track progress
 of chord switching. While learning guitar, it is important to exercise your muscle
@@ -25,27 +25,23 @@ track progress.
 ## Development
 
 This app is a Ruby on Rails web application which runs under the version of ruby specified
-in the .ruby-version file. It makes use of the vue.js component framework for the UI. The
-application skeleton is based on the browserify vue and Rails integration by Chris V. Fritz:
-https://github.com/chrisvfritz/rails-javascript-integrations/compare/master...vue-browserify.
+in the .ruby-version file. It makes use Rails 7 turbo and the tailwind CSS framework.
+The intent of this version is to get rid of the heavy SPA framework in version 1
 
-The version of node needed to run the application is specified in the .npmrc file.
-
-You must have a working ruby and node environment in order to run this application.
+You must have a working ruby order to run this application.
 
 ### Setup
 
 ```bash
 gem install bundler
 bundle install
-npm install
 ```
 
 ### Running the development server
 
 The development server uses foreman to launch Rails and a watchify process that
-recompiles the frontend UI whenever any of the Vue.js components are added or updated.
+recompiles the frontend CSS whenever any major tailwind changes are made.
 
 ```bash
-foreman start -f Procfile.dev
+./bin/dev
 ```

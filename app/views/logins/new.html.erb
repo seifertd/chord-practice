@@ -1,0 +1,35 @@
+<div class="max-w-md mx-auto mt-16 px-4">
+  <h1 class="text-2xl font-semibold mb-2">Sign In</h1>
+  <p class="text-sm text-gray-600 dark:text-gray-400 mb-6">
+    Sign in to access your practice sessions and chord progress from any device.
+    Don't have an account yet?
+    <%= link_to "Register for free", new_registration_path, class: "text-blue-600 dark:text-blue-400 hover:underline" %> —
+    your existing practice data in this browser will be carried over automatically.
+  </p>
+
+  <% if flash[:alert] %>
+    <div class="mb-4 p-3 bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-200 rounded-lg text-sm">
+      <%= flash[:alert] %>
+    </div>
+  <% end %>
+
+  <%= form_with url: login_path, method: :post do |f| %>
+    <div class="mb-4">
+      <%= f.label :email_address, "Email", class: "block text-sm font-medium mb-1" %>
+      <%= f.email_field :email_address, required: true, autofocus: true, autocomplete: "email",
+            class: "w-full border border-gray-300 dark:border-gray-600 dark:bg-gray-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" %>
+    </div>
+
+    <div class="mb-6">
+      <%= f.label :password, "Password", class: "block text-sm font-medium mb-1" %>
+      <%= f.password_field :password, required: true, autocomplete: "current-password",
+            class: "w-full border border-gray-300 dark:border-gray-600 dark:bg-gray-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" %>
+    </div>
+
+    <%= f.submit "Sign In", class: "w-full bg-blue-700 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 text-white font-medium rounded-lg text-sm px-4 py-2 cursor-pointer" %>
+  <% end %>
+
+  <p class="mt-4 text-sm text-center text-gray-600 dark:text-gray-400">
+    No account? <%= link_to "Register", new_registration_path, class: "text-blue-600 dark:text-blue-400 hover:underline" %>
+  </p>
+</div>

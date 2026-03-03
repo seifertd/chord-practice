@@ -1,1 +1,227 @@
-<!--show-->
+<% if @session.complete %>
+
+  <%# ---- Completed session: static summary table ---- %>
+  <div class="mt-6">
+    <div class="flex items-center justify-between mb-4">
+      <h2 class="text-lg font-semibold">Session — <%= @session.created_at.strftime("%Y-%m-%d %H:%M") %></h2>
+      <%= link_to "← Back", sessions_path, class: "text-sm text-blue-600 dark:text-blue-400 hover:underline" %>
+    </div>
+
+    <dl class="flex gap-6 text-sm mb-6 text-gray-600 dark:text-gray-400">
+      <div>
+        <dt class="font-medium text-gray-500 dark:text-gray-500">Duration per pair</dt>
+        <dd><%= @session.duration %> min</dd>
+      </div>
+      <div>
+        <dt class="font-medium text-gray-500 dark:text-gray-500">Chord pairs</dt>
+        <dd><%= @session.pairs.size %></dd>
+      </div>
+      <div>
+        <dt class="font-medium text-gray-500 dark:text-gray-500">Status</dt>
+        <dd>
+          <span class="px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400">Complete</span>
+        </dd>
+      </div>
+    </dl>
+
+    <div class="overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-700">
+      <table class="w-full text-sm text-left text-gray-700 dark:text-gray-300">
+        <thead class="text-xs uppercase bg-gray-50 dark:bg-gray-700 text-gray-600 dark:text-gray-400">
+          <tr>
+            <th class="px-4 py-3">Chord Pair</th>
+            <th class="px-4 py-3">Duration</th>
+            <th class="px-4 py-3">Switches</th>
+            <th class="px-4 py-3">Switches / min</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+          <% @session.pairs.each do |pair| %>
+            <tr class="bg-white dark:bg-gray-800">
+              <td class="px-4 py-3 font-medium"><%= pair.first %> ↔ <%= pair.second %></td>
+              <td class="px-4 py-3"><%= @session.duration %> min</td>
+              <td class="px-4 py-3"><%= pair.switches %></td>
+              <td class="px-4 py-3 text-gray-500 dark:text-gray-400">
+                <%= @session.duration > 0 ? (pair.switches.to_f / @session.duration).round(1) : "—" %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+<% else %>
+
+  <%# ---- Practice session UI ---- %>
+  <div class="mt-6 max-w-2xl mx-auto">
+
+    <div class="flex items-center justify-between mb-6">
+      <p class="text-sm text-gray-500 dark:text-gray-400">
+        <%= @session.created_at.strftime("%Y-%m-%d %H:%M") %> &bull;
+        <span id="pairs-left"><%= @session.pairs.size - @start_pair_idx %></span> pair(s) remaining
+      </p>
+      <%= link_to "← Back", sessions_path, class: "text-sm text-blue-600 dark:text-blue-400 hover:underline" %>
+    </div>
+
+    <%# Chord pair displays — all pre-rendered, JS shows only the current one %>
+    <% @pairs_with_chords.each_with_index do |(pair, first_chord, second_chord), idx| %>
+      <div class="pair-display text-center<%= idx != @start_pair_idx ? ' hidden' : '' %>" data-pair-id="<%= pair.id %>">
+        <div class="flex items-center justify-center gap-4 sm:gap-8">
+          <div class="sm:hidden"><%= fret_board_svg(first_chord, size: :small) %></div>
+          <div class="max-sm:hidden"><%= fret_board_svg(first_chord, size: :large) %></div>
+          <div class="text-3xl sm:text-5xl font-light text-gray-500 dark:text-gray-400">↔</div>
+          <div class="sm:hidden"><%= fret_board_svg(second_chord, size: :small) %></div>
+          <div class="max-sm:hidden"><%= fret_board_svg(second_chord, size: :large) %></div>
+        </div>
+      </div>
+    <% end %>
+
+    <%# State-driven footer — all states pre-rendered, JS toggles visibility %>
+    <div class="mt-10 text-center space-y-4">
+
+      <div id="state-ready">
+        <div class="p-4 rounded-lg bg-blue-50 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300">
+          <strong>Ready to start.</strong> Click Start when you have your guitar.
+        </div>
+        <button onclick="Practice.start()"
+                class="mt-4 px-8 py-2.5 text-sm font-medium rounded-lg bg-green-600 hover:bg-green-700 text-white">
+          Start
+        </button>
+      </div>
+
+      <div id="state-waiting" class="hidden">
+        <div class="p-4 rounded-lg bg-yellow-50 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300 text-lg">
+          <strong id="countdown-waiting">5</strong> &mdash; Get ready to start switching&hellip;
+        </div>
+      </div>
+
+      <div id="state-switching" class="hidden">
+        <div class="p-4 rounded-lg bg-green-50 text-green-800 dark:bg-green-900/30 dark:text-green-300 text-lg">
+          <strong id="countdown-switching">60</strong> &mdash; Switch as fast as you can!
+        </div>
+      </div>
+
+      <div id="state-recording" class="hidden">
+        <div class="flex items-center justify-center gap-3">
+          <label for="switches-input" class="text-sm font-medium">How many switches did you make?</label>
+          <input id="switches-input" type="number" min="1" value=""
+                 placeholder="?" class="w-20 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-3 py-1.5 text-sm text-center">
+          <button onclick="Practice.record()"
+                  class="px-4 py-1.5 text-sm font-medium rounded-lg bg-blue-600 hover:bg-blue-700 text-white">
+            Save
+          </button>
+        </div>
+      </div>
+
+      <div id="state-next" class="hidden">
+        <div class="p-4 rounded-lg bg-blue-50 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300">
+          <strong id="recorded-count">0</strong> switches recorded. Ready for the next pair?
+        </div>
+        <button onclick="Practice.start()"
+                class="mt-4 px-8 py-2.5 text-sm font-medium rounded-lg bg-green-600 hover:bg-green-700 text-white">
+          Continue
+        </button>
+      </div>
+
+      <div id="state-complete" class="hidden">
+        <div class="p-4 rounded-lg bg-green-50 text-green-800 dark:bg-green-900/30 dark:text-green-300">
+          <strong>Session complete!</strong> Great work &mdash; saving your results&hellip;
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    const Practice = (function () {
+      const PREP_SECS   = 5;
+      const SWITCH_SECS = <%= Rails.env.development? ? 5 : @session.duration * 60 %>;
+      const SESSION_ID  = <%= @session.id %>;
+      const PAIR_IDS    = <%= raw @session.pairs.map(&:id).to_json %>;
+      const CSRF        = document.querySelector('meta[name="csrf-token"]').content;
+
+      const STATES = ['ready', 'waiting', 'switching', 'recording', 'next', 'complete'];
+
+      let pairIdx      = <%= @start_pair_idx %>;
+      let countdown    = PREP_SECS;
+      let state        = 'ready';
+      let timer        = null;
+      let switchCounts = <%= raw @session.pairs.map { |p| p.switches || 0 }.to_json %>;
+
+      const pairEls    = document.querySelectorAll('.pair-display');
+      const pairsLeft  = document.getElementById('pairs-left');
+
+      function showPair(idx) {
+        pairEls.forEach((el, i) => el.classList.toggle('hidden', i !== idx));
+        pairsLeft.textContent = PAIR_IDS.length - idx;
+      }
+
+      function render() {
+        STATES.forEach(s => document.getElementById('state-' + s).classList.toggle('hidden', s !== state));
+        if (state === 'waiting')    document.getElementById('countdown-waiting').textContent   = countdown;
+        if (state === 'switching')  document.getElementById('countdown-switching').textContent = countdown;
+        if (state === 'next')       document.getElementById('recorded-count').textContent      = switchCounts[pairIdx - 1];
+        if (state === 'recording') {
+          const inp = document.getElementById('switches-input');
+          inp.value = '';
+          setTimeout(() => inp.focus(), 0);
+        }
+      }
+
+      function tick() {
+        countdown--;
+        if (countdown <= 0) {
+          if (state === 'waiting') {
+            countdown = SWITCH_SECS;
+            state = 'switching';
+          } else if (state === 'switching') {
+            clearInterval(timer);
+            timer = null;
+            state = 'recording';
+          }
+        }
+        render();
+      }
+
+      function savePair(pairId, count) {
+        return fetch('/sessions/' + SESSION_ID, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': CSRF },
+          body: JSON.stringify({ pairs: [{ id: pairId, switches: count }] })
+        });
+      }
+
+      return {
+        start() {
+          countdown = PREP_SECS;
+          state = 'waiting';
+          render();
+          timer = setInterval(tick, 1000);
+        },
+        record() {
+          const input = document.getElementById('switches-input');
+          const count = parseInt(input.value) || 0;
+          if (count < 1) { input.focus(); input.select(); return; }
+          const pairId = PAIR_IDS[pairIdx];
+          switchCounts[pairIdx] = count;
+          pairIdx++;
+          if (pairIdx >= PAIR_IDS.length) {
+            state = 'complete';
+            render();
+            savePair(pairId, count).then(() => { window.location.href = '/sessions/' + SESSION_ID; });
+          } else {
+            savePair(pairId, count);
+            showPair(pairIdx);
+            state = 'next';
+            render();
+          }
+        }
+      };
+    })();
+
+    document.getElementById('switches-input').addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') Practice.record();
+    });
+  </script>
+
+<% end %>

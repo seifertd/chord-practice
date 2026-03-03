@@ -1,0 +1,9 @@
+one:
+  duration: 1
+  complete: false
+  player: one
+
+two:
+  duration: 2
+  complete: true
+  player: two

@@ -1,8 +1,8 @@
-require 'date'
+require "date"
 
 namespace :practice do
   desc "Create random practice sessions"
-  task :random, [:player_id, :pairs, :starting_at, :sessions, :chords] => [:environment] do |t, args|
+  task :random, [ :player_id, :pairs, :starting_at, :sessions, :chords ] => [ :environment ] do |t, args|
     starting_at = DateTime.parse(args[:starting_at])
     ending_at = DateTime.now
     sessions = args[:sessions].to_i

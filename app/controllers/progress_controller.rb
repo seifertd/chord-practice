@@ -8,29 +8,27 @@ class ProgressController < ApplicationController
           {
             label: chord_pair,
             data: chord_pair_data[chord_pair],
-            borderColor: 'black',
             borderWidth: 2,
-            pointRadius: 2,
+            pointRadius: 2
           }
         end
       },
       options: {
-        showLines: true,
         scales: {
-          yAxes: [{
-            scaleLabel: {
+          x: {
+            type: "time",
+            title: {
               display: true,
-              labelString: "Number of Switches"
+              text: "Date"
             }
-          }],
-          xAxes: [{
-            type: 'time',
-            distribution: 'linear',
-            scaleLabel: {
+          },
+          y: {
+            title: {
               display: true,
-              labelString: 'Date'
-            }
-          }]
+              text: "Switches / min"
+            },
+            beginAtZero: true
+          }
         },
         elements: {
           line: {

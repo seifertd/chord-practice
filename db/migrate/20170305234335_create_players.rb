@@ -3,7 +3,7 @@ class CreatePlayers < ActiveRecord::Migration[5.0]
     create_table :players do |t|
       t.string :uuid
       t.string :name
-      t.text :chords, :default => [].to_yaml
+      t.text :chords, default: [].to_yaml
       t.timestamps
     end
     add_index :players, :uuid, unique: true
