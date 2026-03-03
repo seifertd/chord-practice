@@ -4,8 +4,10 @@ one:
   uuid: player1
   name: Player One
   chords: "---\n- A\n- B\n"
+  password_digest: $2a$12$dUE8mqkdZdQLjm7etdI7UuctpetWmq9zAluJLPC3ShchYiGf3Zpmm
 
 two:
   uuid: player2
   name: Player Two
   chords: "---\n- G\n- D\n"
+  password_digest: $2a$12$dUE8mqkdZdQLjm7etdI7UuctpetWmq9zAluJLPC3ShchYiGf3Zpmm
