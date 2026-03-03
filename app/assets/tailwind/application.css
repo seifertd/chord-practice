@@ -16,3 +16,10 @@
     -webkit-text-stroke: 4px brown;
   }
 }
+
+@media (prefers-color-scheme: light) {
+  .fret-mute, .fret-label {
+    fill: black;
+    stroke: none;
+  }
+}

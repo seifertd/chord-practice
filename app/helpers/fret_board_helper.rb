@@ -63,14 +63,14 @@ module FretBoardHelper
       else
         tx = r2(left * 1.2 + string_gap * string_idx - r)
         ty = r2(top + 2 + fret_gap * fret - 1 + c.fetch(:mute_y_offset, 0))
-        els << %(<text x="#{tx}" y="#{ty}" font-size="#{r * 4}" font-family="sans-serif" fill="white" stroke="black" stroke-width="2" paint-order="stroke fill">x</text>)
+        els << %(<text class="fret-mute" x="#{tx}" y="#{ty}" font-size="#{r * 4}" font-family="sans-serif" fill="white" stroke="black" stroke-width="2" paint-order="stroke fill">x</text>)
       end
     end
 
     # Chord name label centered below the board
     label_x = r2(left + width / 2.0)
     label_y = top + height + (top * 1.5).round
-    els << %(<text x="#{label_x}" y="#{label_y}" font-size="#{r * 3}" font-family="sans-serif" font-weight="bold" text-anchor="middle" fill="white" stroke="black" stroke-width="2" paint-order="stroke fill">#{chord.name}</text>)
+    els << %(<text class="fret-label" x="#{label_x}" y="#{label_y}" font-size="#{r * 3}" font-family="sans-serif" font-weight="bold" text-anchor="middle" fill="white" stroke="black" stroke-width="2" paint-order="stroke fill">#{chord.name}</text>)
 
     svg = <<~SVG
       <svg width="#{canvas_width}" height="#{canvas_height}" overflow="visible" xmlns="http://www.w3.org/2000/svg">
