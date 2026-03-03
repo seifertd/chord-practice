@@ -42,18 +42,3 @@ set :keep_releases, 3
 # RVM settings
 set :rvm_ruby_version, "ruby-3.3.10@chord-practice"
 set :rvm_type, :system
-
-# Consider deleting this hack
-#namespace :deploy do
-#  namespace :assets do
-#    task :precompile do
-#      on roles(:app) do
-#        within "#{current_path}" do
-#          with rails_env: "#{fetch(:stage)}" do
-#            execute :bundle, "exec rake assets:precompile"
-#          end
-#        end
-#      end
-#    end
-#  end
-#end
