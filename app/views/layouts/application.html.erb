@@ -8,39 +8,53 @@
     <%= stylesheet_link_tag "tailwind", "inter-font", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag 'application', media: 'all' %>
     <%= csrf_meta_tags %>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/svg.js/2.6.3/svg.min.js"></script>
   </head>
-  <body class="bg-white border-gray-200 dark:bg-gray-800 dark:text-white">
-    <header>
-      <nav class="bg-white border-gray-200 px-4 lg:px-6 py-2.5 dark:bg-gray-800">
-        <div class="flex flex-wrap items-center mx-auto max-w-screen-xl">
-          <%= link_to root_url, class: "flex items-center pr-10" do %>
-            <img src="<%= image_path 'guitar.png' %>" class="mr-3 h-6 sm:h-9" alt="Chord Practice Logo" />
-            <span class="text-xl font-semibold whitespace-nowrap dark:text-white">Chord Practice</span>
-          <% end %>
+  <body class="bg-white dark:bg-gray-800 dark:text-white">
+
+    <nav class="relative bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-4 py-2.5">
+      <div class="flex items-center gap-4">
+
+        <%= link_to root_url, class: "flex items-center gap-2" do %>
+          <img src="<%= image_path 'guitar.png' %>" class="h-8" alt="Chord Practice Logo" />
+          <span class="text-xl font-semibold whitespace-nowrap dark:text-white">Chord Practice</span>
+        <% end %>
+
+        <!-- Hamburger (mobile only) -->
+        <button id="nav-toggle" class="md:hidden ml-auto p-2 rounded text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700" aria-label="Toggle menu">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+          </svg>
+        </button>
+
+        <!-- Nav links: hidden on mobile until toggled, always visible on md+ -->
+        <div id="nav-menu" class="max-md:hidden md:flex items-center gap-2 max-md:absolute max-md:top-full max-md:right-0 max-md:bg-white max-md:dark:bg-gray-800 max-md:border max-md:border-gray-200 max-md:dark:border-gray-700 max-md:rounded-b-lg max-md:shadow-lg max-md:p-3 max-md:z-50">
           <% [
-            ['Home', root_path],
-            ['Chords', chords_path],
+            ['Home',     root_path],
+            ['Chords',   chords_path],
             ['Practice', sessions_path],
             ['Progress', progress_index_path],
-          ].each do |link_text, link_path| -%>
-          <div class="flex items-center">
-            <%= link_to link_text, link_path, class: "
-            text-white bg-blue-700 hover:bg-blue-800
-            focus:ring-4 focus:ring-blue-300 font-medium
-            rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5
-            mr-2 dark:bg-blue-600 dark:hover:bg-blue-700
-            focus:outline-none dark:focus:ring-blue-800" %>
-          </div>
-        <% end %>
+          ].each do |label, path| %>
+            <%= link_to label, path, class: "text-white bg-blue-700 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 font-medium rounded-lg text-sm px-4 py-2" %>
+          <% end %>
         </div>
-      </nav>
-    </header>
-    <main class="container mx-lg px-5 flex">
-      <div class="min-w-full w-max" id="main-content">
-        <%= yield %>
+
       </div>
+    </nav>
+
+    <main class="px-4 py-4">
+      <%= yield %>
     </main>
+
     <%= javascript_include_tag 'application' %>
+
+    <script>
+      document.getElementById('nav-toggle').addEventListener('click', function () {
+        var menu = document.getElementById('nav-menu');
+        var open = menu.classList.toggle('max-md:hidden');
+        menu.classList.toggle('flex', !open);
+        menu.classList.toggle('flex-col', !open);
+      });
+    </script>
+
   </body>
 </html>
