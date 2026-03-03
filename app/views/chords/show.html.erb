@@ -3,8 +3,8 @@
   <div>
     <h2 class="text-lg font-semibold mb-2">Chord Library</h2>
     <ul id="chord-library" class="flex flex-nowrap gap-3 overflow-x-auto pb-2">
-      <% @chords.each do |chord| %>
-        <li class="flex-none cursor-pointer rounded border border-gray-300 dark:border-gray-600 p-1 hover:bg-gray-100 dark:hover:bg-gray-700">
+      <% @library_chords.each do |chord| %>
+        <li class="flex-none cursor-pointer rounded border border-gray-300 dark:border-gray-600 p-1 hover:bg-gray-100 dark:hover:bg-gray-700" data-chord="<%= chord.name %>">
           <%= fret_board_svg(chord, size: :small) %>
         </li>
       <% end %>
@@ -13,8 +13,13 @@
 
   <div>
     <h2 class="text-lg font-semibold mb-2">My Chords</h2>
-    <ul id="my-chords" class="flex flex-nowrap gap-3 overflow-x-auto pb-2 min-h-24 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded p-2">
-      <li id="my-chords-empty" class="self-center px-4 text-gray-400 italic text-sm">Tap a chord to add it here</li>
+    <ul id="my-chords" class="flex flex-nowrap gap-3 overflow-x-auto pb-2 min-h-24">
+      <li id="my-chords-empty" class="self-center flex-none px-4 text-gray-400 italic text-sm w-32 text-center" <%= @my_chords.any? ? 'style="display:none"' : '' %>>Tap a chord above to add it here — tap a chord here to remove it</li>
+      <% @my_chords.each do |chord| %>
+        <li class="flex-none cursor-pointer rounded border border-gray-300 dark:border-gray-600 p-1 hover:bg-gray-100 dark:hover:bg-gray-700" data-chord="<%= chord.name %>">
+          <%= fret_board_svg(chord, size: :small) %>
+        </li>
+      <% end %>
     </ul>
   </div>
 
@@ -25,24 +30,39 @@
     const library  = document.getElementById('chord-library');
     const myChords = document.getElementById('my-chords');
     const empty    = document.getElementById('my-chords-empty');
+    const csrf     = document.querySelector('meta[name="csrf-token"]').content;
 
     function updateEmpty() {
-      const hasChords = myChords.querySelector('li:not(#my-chords-empty)');
+      const hasChords = myChords.querySelector('li[data-chord]');
       empty.style.display = hasChords ? 'none' : '';
     }
 
+    function save() {
+      const names = Array.from(myChords.querySelectorAll('li[data-chord]'))
+                         .map(li => li.dataset.chord);
+      fetch('/chords', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': csrf },
+        body: JSON.stringify({ chords: names }),
+        keepalive: true
+      });
+    }
+
     library.addEventListener('click', function (e) {
-      const item = e.target.closest('#chord-library > li');
+      const item = e.target.closest('#chord-library > li[data-chord]');
       if (!item) return;
       myChords.appendChild(item);
+      myChords.scrollLeft = myChords.scrollWidth;
       updateEmpty();
+      save();
     });
 
     myChords.addEventListener('click', function (e) {
-      const item = e.target.closest('#my-chords > li');
-      if (!item || item.id === 'my-chords-empty') return;
+      const item = e.target.closest('#my-chords > li[data-chord]');
+      if (!item) return;
       library.appendChild(item);
       updateEmpty();
+      save();
     });
   });
 </script>
