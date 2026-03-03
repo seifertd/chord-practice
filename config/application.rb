@@ -6,7 +6,6 @@ require "rails"
   action_controller/railtie
   action_view/railtie
   action_cable/engine
-  action_text/engine
   rails/test_unit/railtie
   sprockets/railtie
 ].each do |railtie|
@@ -22,9 +21,6 @@ Bundler.require(*Rails.groups)
 
 module ChordPractice
   class Application < Rails::Application
-    # no active storage routes
-    config.active_storage.draw_routes = false
-
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 7.2
 
