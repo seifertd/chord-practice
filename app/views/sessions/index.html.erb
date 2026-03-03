@@ -1,10 +1,18 @@
 <div class="mt-6">
-  <h2 class="text-lg font-semibold mb-4">Practice Sessions</h2>
+  <div class="flex items-center justify-between mb-4">
+    <h2 class="text-lg font-semibold">Practice Sessions</h2>
+    <% if @current_player.chords.length > 1 %>
+      <button onclick="document.getElementById('new-session-dialog').showModal()"
+              class="px-4 py-2 text-sm font-medium rounded-lg bg-blue-600 hover:bg-blue-700 text-white">
+        + New Session
+      </button>
+    <% end %>
+  </div>
 
   <% if @sessions.empty? %>
     <% if @current_player.chords.length > 1 %>
       <div class="p-4 text-sm text-blue-800 bg-blue-50 rounded-lg dark:bg-blue-900/30 dark:text-blue-300">
-        <strong>Hey!</strong> You have no practice sessions yet. Create one to get started.
+        <strong>Hey!</strong> You have no practice sessions yet. Click <strong>New Session</strong> to get started.
       </div>
     <% else %>
       <div class="p-4 text-sm text-blue-800 bg-blue-50 rounded-lg dark:bg-blue-900/30 dark:text-blue-300">
@@ -33,19 +41,25 @@
               <td class="px-4 py-3">
                 <% if session.complete %>
                   <span class="px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400">Complete</span>
+                <% elsif session.started %>
+                  <span class="px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400">In Progress</span>
                 <% else %>
-                  <span class="px-2 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400">In Progress</span>
+                  <span class="px-2 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400">Not Started</span>
                 <% end %>
               </td>
               <td class="px-4 py-3">
-                <% if session.complete %>
-                  <div class="flex gap-2">
+                <div class="flex gap-2">
+                  <% if session.complete %>
                     <%= link_to "View", session_path(session), class: "px-3 py-1 text-xs font-medium rounded bg-blue-600 hover:bg-blue-700 text-white" %>
-                    <%= button_to "Delete", session_path(session), method: :delete,
-                          data: { turbo_confirm: "Are you sure you want to delete this session?" },
-                          class: "px-3 py-1 text-xs font-medium rounded bg-red-600 hover:bg-red-700 text-white cursor-pointer" %>
-                  </div>
-                <% end %>
+                  <% elsif session.started %>
+                    <%= link_to "Continue", session_path(session), class: "px-3 py-1 text-xs font-medium rounded bg-yellow-600 hover:bg-yellow-700 text-white" %>
+                  <% else %>
+                    <%= link_to "Start", session_path(session), class: "px-3 py-1 text-xs font-medium rounded bg-green-600 hover:bg-green-700 text-white" %>
+                  <% end %>
+                  <%= button_to "Delete", session_path(session), method: :delete,
+                        data: { turbo_confirm: "Are you sure you want to delete this session?" },
+                        class: "px-3 py-1 text-xs font-medium rounded bg-red-600 hover:bg-red-700 text-white cursor-pointer" %>
+                </div>
               </td>
             </tr>
           <% end %>
@@ -54,3 +68,31 @@
     </div>
   <% end %>
 </div>
+
+<% if @current_player.chords.length > 1 %>
+  <dialog id="new-session-dialog"
+          class="m-auto rounded-lg shadow-xl p-0 w-full max-w-md backdrop:bg-black/50 dark:bg-gray-800 dark:text-white">
+    <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+      <h3 class="text-base font-semibold">New Practice Session</h3>
+    </div>
+    <%= form_with url: sessions_path, scope: :session, method: :post, class: "px-6 py-4 space-y-4" do |f| %>
+      <div>
+        <%= f.label :number_of_pairs, "Number of chord pairs", class: "block text-sm font-medium mb-1" %>
+        <%= f.select :number_of_pairs, (1..15).to_a, { selected: 10 },
+              class: "w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-3 py-2 text-sm" %>
+      </div>
+      <div>
+        <%= f.label :duration, "Duration per pair", class: "block text-sm font-medium mb-1" %>
+        <%= f.select :duration, [[" 1 minute", 1], ["2 minutes", 2], ["3 minutes", 3]], { selected: 1 },
+              class: "w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-3 py-2 text-sm" %>
+      </div>
+      <div class="flex justify-end gap-3 pt-2">
+        <button type="button" onclick="document.getElementById('new-session-dialog').close()"
+                class="px-4 py-2 text-sm font-medium rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700">
+          Cancel
+        </button>
+        <%= f.submit "Create", class: "px-4 py-2 text-sm font-medium rounded-lg bg-blue-600 hover:bg-blue-700 text-white cursor-pointer" %>
+      </div>
+    <% end %>
+  </dialog>
+<% end %>

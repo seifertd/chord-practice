@@ -1,5 +1,6 @@
 module FretBoardHelper
   CONFIGS = {
+    large:   { width: 200, height: 280, top: 40, left: 6, num_strings: 6, note_radius: 9, mute_y_offset: 38 },
     default: { width: 150, height: 210, top: 30, left: 5, num_strings: 6, note_radius: 7, mute_y_offset: 31 },
     small:   { width: 75,  height: 105, top: 15, left: 5, num_strings: 6, note_radius: 4, mute_y_offset: 14 },
     tiny:    { width: 50,  height: 70,  top: 12, left: 5, num_strings: 6, note_radius: 3, mute_y_offset: 9  }

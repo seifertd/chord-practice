@@ -1,22 +1,33 @@
 class SessionsController < ApplicationController
   before_action :get_session, only: [:show, :destroy, :update]
   def index
-    @sessions = current_player.sessions.order(created_at: :desc)
+    @sessions = current_player.sessions.includes(:pairs).order(created_at: :desc)
   end
 
   def show
+    unless @session.complete
+      chord_lookup = Chord.all.index_by(&:name)
+      @pairs_with_chords = @session.pairs.map do |pair|
+        [pair, chord_lookup[pair.first], chord_lookup[pair.second]]
+      end
+      @start_pair_idx = @session.pairs.index { |p| !p.complete } || 0
+    end
   end
 
   def destroy
     @session.destroy
+    redirect_to sessions_path
   end
 
   # POST /sessions
   def create
-    request.format = :json
     @session = current_player.sessions.create!(session_params.merge(complete: false))
-    @session.generate_random_pairs(params[:session][:numberOfSwitches], chords: current_player.chords.map{|name| Chord.all.find{|chord| chord.name == name} })
+    @session.generate_random_pairs(
+      params[:session][:number_of_pairs].to_i,
+      chords: current_player.chords.map { |name| Chord.all.find { |chord| chord.name == name } }
+    )
     @session.save!
+    redirect_to sessions_path
   end
 
   # PUT /sessions/:id
@@ -32,6 +43,7 @@ class SessionsController < ApplicationController
     end
     @session.complete = @session.done
     @session.save
+    head :ok
   end
 
   private
