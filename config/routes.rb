@@ -6,4 +6,7 @@ Rails.application.routes.draw do
   resources :progress, only: [:index]
   root 'static_pages#home'
   resource :chords, only: [:show, :update]
+
+  resource :login, only: [:new, :create, :destroy]
+  resource :registration, only: [:new, :create]
 end

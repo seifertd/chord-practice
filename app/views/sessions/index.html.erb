@@ -1,7 +1,7 @@
 <div class="mt-6">
   <div class="flex items-center justify-between mb-4">
     <h2 class="text-lg font-semibold">Practice Sessions</h2>
-    <% if @current_player.chords.length > 1 %>
+    <% if current_player.chords.length > 1 %>
       <button onclick="document.getElementById('new-session-dialog').showModal()"
               class="px-4 py-2 text-sm font-medium rounded-lg bg-blue-600 hover:bg-blue-700 text-white">
         + New Session
@@ -10,7 +10,7 @@
   </div>
 
   <% if @sessions.empty? %>
-    <% if @current_player.chords.length > 1 %>
+    <% if current_player.chords.length > 1 %>
       <div class="p-4 text-sm text-blue-800 bg-blue-50 rounded-lg dark:bg-blue-900/30 dark:text-blue-300">
         <strong>Hey!</strong> You have no practice sessions yet. Click <strong>New Session</strong> to get started.
       </div>
@@ -69,7 +69,7 @@
   <% end %>
 </div>
 
-<% if @current_player.chords.length > 1 %>
+<% if current_player.chords.length > 1 %>
   <dialog id="new-session-dialog"
           class="m-auto rounded-lg shadow-xl p-0 w-full max-w-md backdrop:bg-black/50 dark:bg-gray-800 dark:text-white">
     <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">

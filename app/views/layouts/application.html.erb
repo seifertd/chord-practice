@@ -37,10 +37,29 @@
           ].each do |label, path| %>
             <%= link_to label, path, class: "text-white bg-blue-700 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 font-medium rounded-lg text-sm px-4 py-2" %>
           <% end %>
+          <% if authenticated? %>
+            <span class="text-sm text-gray-500 dark:text-gray-400 px-2" title="<%= current_player.email_address %>"><%= current_player.name %></span>
+            <%= button_to "Log out", login_path, method: :delete,
+                  class: "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 font-medium rounded-lg text-sm px-4 py-2 cursor-pointer bg-transparent border-0" %>
+          <% else %>
+            <%= link_to "Log in", new_login_path, class: "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 font-medium rounded-lg text-sm px-4 py-2" %>
+          <% end %>
         </div>
 
       </div>
     </nav>
+
+    <% unless authenticated? %>
+      <div class="bg-amber-50 dark:bg-amber-900/30 border-b border-amber-200 dark:border-amber-700 px-4 py-3 text-sm text-amber-800 dark:text-amber-300 flex items-center justify-between gap-4">
+        <span>
+          <strong>You're not logged in.</strong>
+          Your practice data is saved temporarily in this browser, but will be lost if you clear cookies or switch devices.
+          <%= link_to "Create a free account", new_registration_path, class: "underline hover:no-underline font-medium" %>
+          to save your progress permanently.
+        </span>
+        <%= link_to "Sign in", new_login_path, class: "shrink-0 text-amber-800 dark:text-amber-300 underline hover:no-underline font-medium" %>
+      </div>
+    <% end %>
 
     <main class="px-4 py-4">
       <%= yield %>

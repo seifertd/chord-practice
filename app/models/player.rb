@@ -1,6 +1,9 @@
 class Player < ApplicationRecord
+  has_secure_password
+  has_many :login_sessions, dependent: :destroy
   serialize :chords, coder: YAML, type: Array
   has_many :sessions, dependent: :destroy
+  normalizes :email_address, with: -> e { e.strip.downcase }
 
   def start_practice_session(options)
     self.sessions.create(options)

@@ -10,7 +10,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2017_03_23_221743) do
+ActiveRecord::Schema[7.2].define(version: 2026_03_02_000002) do
+  create_table "login_sessions", force: :cascade do |t|
+    t.integer "player_id", null: false
+    t.string "token", null: false
+    t.string "user_agent"
+    t.string "ip_address"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["player_id"], name: "index_login_sessions_on_player_id"
+    t.index ["token"], name: "index_login_sessions_on_token", unique: true
+  end
+
   create_table "pairs", force: :cascade do |t|
     t.string "first"
     t.string "second"
@@ -26,6 +37,9 @@ ActiveRecord::Schema[7.2].define(version: 2017_03_23_221743) do
     t.text "chords", default: "--- []\n"
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
+    t.string "email_address"
+    t.string "password_digest"
+    t.index ["email_address"], name: "index_players_on_email_address", unique: true
     t.index ["name"], name: "index_players_on_name"
     t.index ["uuid"], name: "index_players_on_uuid", unique: true
   end
@@ -39,6 +53,7 @@ ActiveRecord::Schema[7.2].define(version: 2017_03_23_221743) do
     t.index ["player_id"], name: "index_sessions_on_player_id"
   end
 
+  add_foreign_key "login_sessions", "players"
   add_foreign_key "pairs", "sessions"
   add_foreign_key "sessions", "players"
 end
