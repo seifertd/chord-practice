@@ -27,7 +27,7 @@ set :scm_verbose, true
 # set :pty, true
 
 # Default value for :linked_files is []
-append :linked_files, "config/database.yml", "config/secrets.yml", "db/production.sqlite3"
+append :linked_files, "config/database.yml", "config/credentials.yml.enc", "db/production.sqlite3"
 
 # Default value for linked_dirs is []
 append :linked_dirs, "log", "tmp/pids", "tmp/cache", "tmp/sockets", "public/system"
@@ -39,24 +39,11 @@ append :linked_dirs, "log", "tmp/pids", "tmp/cache", "tmp/sockets", "public/syst
 set :keep_releases, 3
 
 
-# Passenger settings:
-set :passenger_restart_with_touch, true
-
 # RVM settings
-set :rvm_ruby_version, "ruby-2.6.3@chord-practice"
+set :rvm_ruby_version, "ruby-3.3.10@chord-practice"
 set :rvm_type, :system
 
-before :"deploy:assets:precompile", :"deploy:frontend", :"deploy:migrate"
-
 namespace :deploy do
-  task :frontend do
-    on roles(:app) do
-      within "#{current_path}" do
-        execute :npm, "install"
-        execute :npm, "run build"
-      end
-    end
-  end
   namespace :assets do
     task :precompile do
       on roles(:app) do
