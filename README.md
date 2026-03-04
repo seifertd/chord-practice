@@ -1,5 +1,7 @@
 # Chord Practice Version 2
 
+Running version of this site: https://chord-practice.com
+
 This web applications allows people learning guitar to practice and track progress
 of chord switching. While learning guitar, it is important to exercise your muscle
 memory by switching between chords. This app tracks a user's known chords (from
