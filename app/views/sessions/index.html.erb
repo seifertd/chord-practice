@@ -26,8 +26,8 @@
         <thead class="text-xs uppercase bg-gray-50 dark:bg-gray-700 text-gray-600 dark:text-gray-400">
           <tr>
             <th class="px-4 py-3">Date</th>
-            <th class="px-4 py-3">Chord Pairs</th>
-            <th class="px-4 py-3">Duration (min)</th>
+            <th class="px-4 py-3 max-sm:hidden">Chord Pairs</th>
+            <th class="px-4 py-3 max-sm:hidden">Duration (min)</th>
             <th class="px-4 py-3">Status</th>
             <th class="px-4 py-3">Actions</th>
           </tr>
@@ -35,9 +35,12 @@
         <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
           <% @sessions.each do |session| %>
             <tr class="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700">
-              <td class="px-4 py-3 whitespace-nowrap"><%= session.created_at.strftime("%Y-%m-%d %H:%M") %></td>
-              <td class="px-4 py-3"><%= session.pairs.size %></td>
-              <td class="px-4 py-3"><%= session.duration %></td>
+              <td class="px-4 py-3 whitespace-nowrap leading-tight">
+                <div><%= session.created_at.strftime("%b %-d") %></div>
+                <div class="text-xs text-gray-500 dark:text-gray-400"><%= session.created_at.strftime("%-I:%M %p").downcase %></div>
+              </td>
+              <td class="px-4 py-3 max-sm:hidden"><%= session.pairs.size %></td>
+              <td class="px-4 py-3 max-sm:hidden"><%= session.duration %></td>
               <td class="px-4 py-3">
                 <% if session.complete %>
                   <span class="px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400">Complete</span>
