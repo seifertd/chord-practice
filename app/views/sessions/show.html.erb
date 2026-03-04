@@ -3,7 +3,7 @@
   <%# ---- Completed session: static summary table ---- %>
   <div class="mt-6">
     <div class="flex items-center justify-between mb-4">
-      <h2 class="text-lg font-semibold">Session — <%= @session.created_at.strftime("%Y-%m-%d %H:%M") %></h2>
+      <h2 class="text-lg font-semibold">Session — <time class="local-time" datetime="<%= @session.created_at.iso8601 %>" data-format="long"><%= @session.created_at.to_fs(:long) %></time></h2>
       <%= link_to "← Back", sessions_path, class: "text-sm text-blue-600 dark:text-blue-400 hover:underline" %>
     </div>
 
@@ -57,7 +57,7 @@
 
     <div class="flex items-center justify-between mb-6">
       <p class="text-sm text-gray-500 dark:text-gray-400">
-        <%= @session.created_at.strftime("%Y-%m-%d %H:%M") %> &bull;
+        <time class="local-time" datetime="<%= @session.created_at.iso8601 %>" data-format="long"><%= @session.created_at.to_fs(:long) %></time> &bull;
         <span id="pairs-left"><%= @session.pairs.size - @start_pair_idx %></span> pair(s) remaining
       </p>
       <%= link_to "← Back", sessions_path, class: "text-sm text-blue-600 dark:text-blue-400 hover:underline" %>

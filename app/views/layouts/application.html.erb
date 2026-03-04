@@ -69,6 +69,20 @@
     </main>
 
     <script>
+      document.querySelectorAll('time.local-time').forEach(function(el) {
+        var date = new Date(el.getAttribute('datetime'));
+        var fmt = el.dataset.format;
+        var options;
+        if (fmt === 'date') {
+          options = { month: 'short', day: 'numeric' };
+        } else if (fmt === 'time') {
+          options = { hour: 'numeric', minute: '2-digit' };
+        } else {
+          options = { month: 'long', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit' };
+        }
+        el.textContent = new Intl.DateTimeFormat(undefined, options).format(date);
+      });
+
       document.getElementById('nav-toggle').addEventListener('click', function () {
         var menu = document.getElementById('nav-menu');
         var open = menu.classList.toggle('max-md:hidden');
