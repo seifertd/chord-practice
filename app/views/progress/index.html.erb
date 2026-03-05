@@ -14,6 +14,25 @@
       </div>
     <% end %>
   <% else %>
+    <div class="flex flex-wrap items-center gap-3 mb-4">
+      <div class="flex rounded-lg overflow-hidden border border-gray-300 dark:border-gray-600 text-sm">
+        <button onclick="setRange('month')" id="btn-month"
+                class="range-btn px-3 py-1.5 bg-blue-600 text-white">Last Month</button>
+        <button onclick="setRange('year')" id="btn-year"
+                class="range-btn px-3 py-1.5 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600">Last Year</button>
+        <button onclick="setRange('all')" id="btn-all"
+                class="range-btn px-3 py-1.5 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600">All Time</button>
+      </div>
+
+      <select id="pair-filter" onchange="filterPair(this.value)"
+              class="rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-3 py-1.5 text-sm">
+        <option value="all">All Pairs</option>
+        <% @progress[:data][:datasets].each do |ds| %>
+          <option value="<%= ds[:label] %>"><%= ds[:label] %></option>
+        <% end %>
+      </select>
+    </div>
+
     <div class="relative">
       <canvas id="progressChart"></canvas>
     </div>
@@ -37,7 +56,59 @@
           dataset.borderColor = paletteColor(i, 1.0);
           dataset.backgroundColor = paletteColor(i, 0.3);
         });
-        new Chart("progressChart", config);
+        var chart = new Chart("progressChart", config);
+
+        var currentXMin = null;
+
+        function recalcYMax() {
+          var yMax = 0;
+          chart.data.datasets.forEach(function(ds) {
+            if (ds.hidden) return;
+            ds.data.forEach(function(point) {
+              if (!currentXMin || new Date(point.x) >= currentXMin) {
+                yMax = Math.max(yMax, point.y);
+              }
+            });
+          });
+          chart.options.scales.y.max = yMax > 0 ? Math.ceil(yMax * 1.1) : undefined;
+        }
+
+        function setRange(range) {
+          var now = new Date();
+          if (range === 'month') {
+            currentXMin = new Date(now.getFullYear(), now.getMonth() - 1, now.getDate());
+          } else if (range === 'year') {
+            currentXMin = new Date(now.getFullYear() - 1, now.getMonth(), now.getDate());
+          } else {
+            currentXMin = null;
+          }
+          chart.options.scales.x.min = currentXMin ? currentXMin.toISOString() : undefined;
+          recalcYMax();
+          chart.update();
+
+          document.querySelectorAll('.range-btn').forEach(function(btn) {
+            var active = btn.id === 'btn-' + range;
+            btn.classList.toggle('bg-blue-600', active);
+            btn.classList.toggle('text-white', active);
+            btn.classList.toggle('bg-white', !active);
+            btn.classList.toggle('dark:bg-gray-700', !active);
+            btn.classList.toggle('text-gray-700', !active);
+            btn.classList.toggle('dark:text-gray-300', !active);
+          });
+        }
+
+        function filterPair(label) {
+          chart.data.datasets.forEach(function(ds) {
+            ds.hidden = label !== 'all' && ds.label !== label;
+          });
+          recalcYMax();
+          chart.update();
+        }
+
+        window.setRange = setRange;
+        window.filterPair = filterPair;
+
+        setRange('month');
       })();
     </script>
   <% end %>

@@ -4,7 +4,7 @@ class ProgressController < ApplicationController
     @progress = {
       type: "line",
       data: {
-        datasets: chord_pair_data.keys.map do |chord_pair|
+        datasets: chord_pair_data.keys.sort.map do |chord_pair|
           {
             label: chord_pair,
             data: chord_pair_data[chord_pair],
@@ -14,9 +14,14 @@ class ProgressController < ApplicationController
         end
       },
       options: {
+        aspectRatio: 2.5,
         scales: {
           x: {
             type: "time",
+            time: {
+              minUnit: "day",
+              displayFormats: { day: "MMM d", week: "MMM d", month: "MMM yyyy" }
+            },
             title: {
               display: true,
               text: "Date"
