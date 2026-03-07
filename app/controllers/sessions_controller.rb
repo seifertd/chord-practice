@@ -2,6 +2,7 @@ class SessionsController < ApplicationController
   before_action :get_session, only: [ :show, :destroy, :update ]
   def index
     @sessions = current_player.sessions.includes(:pairs).order(created_at: :desc)
+    @available_pairs = current_player.chords.sort.combination(2).map { |a, b| "#{a}-#{b}" }
   end
 
   def show
@@ -22,11 +23,19 @@ class SessionsController < ApplicationController
   # POST /sessions
   def create
     @session = current_player.sessions.create!(session_params.merge(complete: false))
-    @session.generate_random_pairs(
-      params[:session][:number_of_pairs].to_i,
-      chords: current_player.chords.map { |name| Chord.all.find { |chord| chord.name == name } }
-    )
-    @session.save!
+    selected_pairs = params[:session][:selected_pairs].presence
+    if selected_pairs
+      selected_pairs.each do |pair_name|
+        first, second = pair_name.split("-", 2)
+        @session.pairs.create!(first: first, second: second)
+      end
+    else
+      @session.generate_random_pairs(
+        params[:session][:number_of_pairs].to_i,
+        chords: current_player.chords.map { |name| Chord.all.find { |chord| chord.name == name } }
+      )
+      @session.save!
+    end
     redirect_to sessions_path
   end
 
