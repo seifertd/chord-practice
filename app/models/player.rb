@@ -15,7 +15,7 @@ class Player < ApplicationRecord
         return pairs
       end
       session.pairs.inject(pairs) do |pairs, pair|
-        pairs["#{pair.first}-#{pair.second}"] << { x: session.created_at.iso8601, y: (pair.switches.to_f / session.duration).round(1) }
+        pairs["#{pair.first}-#{pair.second}"] << { x: session.practiced_at.iso8601, y: (pair.switches.to_f / session.duration).round(1) }
         pairs
       end
     end

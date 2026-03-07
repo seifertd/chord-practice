@@ -2,6 +2,8 @@ class Session < ApplicationRecord
   belongs_to :player
   has_many :pairs, dependent: :destroy
 
+  before_save { self.practiced_at ||= Time.current if complete? }
+
   def started
     pairs.any?(&:complete)
   end

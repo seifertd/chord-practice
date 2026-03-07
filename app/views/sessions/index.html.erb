@@ -35,9 +35,10 @@
         <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
           <% @sessions.each do |session| %>
             <tr class="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700">
+              <% display_at = session.practiced_at || session.created_at %>
               <td class="px-4 py-3 whitespace-nowrap leading-tight">
-                <time class="local-time" datetime="<%= session.created_at.iso8601 %>" data-format="date"><%= session.created_at.strftime("%b %-d") %></time>
-                <div class="text-xs text-gray-500 dark:text-gray-400"><time class="local-time" datetime="<%= session.created_at.iso8601 %>" data-format="time"><%= session.created_at.strftime("%-I:%M %p").downcase %></time></div>
+                <time class="local-time" datetime="<%= display_at.iso8601 %>" data-format="date"><%= display_at.strftime("%b %-d") %></time>
+                <div class="text-xs text-gray-500 dark:text-gray-400"><time class="local-time" datetime="<%= display_at.iso8601 %>" data-format="time"><%= display_at.strftime("%-I:%M %p").downcase %></time></div>
               </td>
               <td class="px-4 py-3 max-sm:hidden"><%= session.pairs.size %></td>
               <td class="px-4 py-3 max-sm:hidden"><%= session.duration %></td>
