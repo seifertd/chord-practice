@@ -60,7 +60,15 @@
         <time class="local-time" datetime="<%= @session.created_at.iso8601 %>" data-format="long"><%= @session.created_at.to_fs(:long) %></time> &bull;
         <span id="pairs-left"><%= @session.pairs.size - @start_pair_idx %></span> pair(s) remaining
       </p>
-      <%= link_to "← Back", sessions_path, class: "text-sm text-blue-600 dark:text-blue-400 hover:underline" %>
+      <div class="flex items-center gap-4">
+        <button id="audio-toggle" onclick="Practice.toggleAudio()"
+                class="flex items-center gap-1.5 text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
+                title="Toggle audio cues">
+          <span id="audio-icon">🔔</span>
+          <span id="audio-label">Sound on</span>
+        </button>
+        <%= link_to "← Back", sessions_path, class: "text-sm text-blue-600 dark:text-blue-400 hover:underline" %>
+      </div>
     </div>
 
     <%# Chord pair displays — all pre-rendered, JS shows only the current one %>
@@ -147,9 +155,59 @@
       let state        = 'ready';
       let timer        = null;
       let switchCounts = <%= raw @session.pairs.map { |p| p.switches || 0 }.to_json %>;
+      let audioCtx     = null;
+      let audioEnabled = true;
 
       const pairEls    = document.querySelectorAll('.pair-display');
       const pairsLeft  = document.getElementById('pairs-left');
+
+      function getAudioCtx() {
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        return audioCtx;
+      }
+
+      function playTone(freq, duration, type = 'sine', gain = 0.4, startDelay = 0) {
+        if (!audioEnabled) return;
+        const ctx = getAudioCtx();
+        const osc = ctx.createOscillator();
+        const env = ctx.createGain();
+        osc.connect(env);
+        env.connect(ctx.destination);
+        osc.type = type;
+        osc.frequency.value = freq;
+        const t = ctx.currentTime + startDelay;
+        env.gain.setValueAtTime(0, t);
+        env.gain.linearRampToValueAtTime(gain, t + 0.01);
+        env.gain.setValueAtTime(gain, t + duration - 0.02);
+        env.gain.linearRampToValueAtTime(0, t + duration);
+        osc.start(t);
+        osc.stop(t + duration);
+      }
+
+      function playCountdownBeep() {
+        // Short medium-pitch tick — like a race clock
+        playTone(660, 0.08, 'square', 0.3);
+      }
+
+      function playGoSignal() {
+        // Three short rising beeps then a long high tone — race start!
+        playTone(440, 0.07, 'square', 0.35, 0.00);
+        playTone(550, 0.07, 'square', 0.35, 0.12);
+        playTone(660, 0.07, 'square', 0.35, 0.24);
+        playTone(880, 0.30, 'sine',   0.45, 0.40);
+      }
+
+      function playWarningBeep(n) {
+        // Rising pitch as the last seconds count down
+        const freq = 440 + (3 - n) * 110;
+        playTone(freq, 0.10, 'square', 0.3);
+      }
+
+      function playStopSignal() {
+        // Two descending tones — like a buzzer/whistle ending a round
+        playTone(660, 0.15, 'sawtooth', 0.4, 0.00);
+        playTone(440, 0.25, 'sawtooth', 0.4, 0.20);
+      }
 
       function showPair(idx) {
         pairEls.forEach((el, i) => el.classList.toggle('hidden', i !== idx));
@@ -174,10 +232,18 @@
           if (state === 'waiting') {
             countdown = SWITCH_SECS;
             state = 'switching';
+            playGoSignal();
           } else if (state === 'switching') {
             clearInterval(timer);
             timer = null;
             state = 'recording';
+            playStopSignal();
+          }
+        } else {
+          if (state === 'waiting') {
+            playCountdownBeep();
+          } else if (state === 'switching' && countdown <= 3) {
+            playWarningBeep(countdown);
           }
         }
         render();
@@ -193,10 +259,19 @@
 
       return {
         start() {
+          // Resume AudioContext in case the browser suspended it
+          const ctx = getAudioCtx();
+          if (ctx.state === 'suspended') ctx.resume();
+
           countdown = PREP_SECS;
           state = 'waiting';
           render();
           timer = setInterval(tick, 1000);
+        },
+        toggleAudio() {
+          audioEnabled = !audioEnabled;
+          document.getElementById('audio-icon').textContent  = audioEnabled ? '🔔' : '🔕';
+          document.getElementById('audio-label').textContent = audioEnabled ? 'Sound on' : 'Sound off';
         },
         record() {
           const input = document.getElementById('switches-input');
