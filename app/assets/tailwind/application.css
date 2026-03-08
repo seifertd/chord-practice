@@ -1,4 +1,10 @@
-@import "tailwindcss";
+@import "tailwindcss" source(none);
+
+@source "../../views/**/*.erb";
+@source "../../helpers/**/*.rb";
+@source "../../javascript/**/*.js";
+@source "../../components/**/*.{erb,rb}";
+
 @plugin "@tailwindcss/forms";
 @plugin "@tailwindcss/typography";
 
