@@ -16,10 +16,16 @@
 
 @layer base {
   .font-outline-2 {
-    -webkit-text-stroke: 2px brown;
+    text-shadow:
+      -2px -2px 0 brown, 0 -2px 0 brown, 2px -2px 0 brown,
+      2px  0   0 brown,  2px  2px 0 brown,
+      0     2px 0 brown, -2px  2px 0 brown, -2px 0 0 brown;
   }
   .font-outline-4 {
-    -webkit-text-stroke: 4px brown;
+    text-shadow:
+      -4px -4px 0 brown, 0 -4px 0 brown, 4px -4px 0 brown,
+      4px  0   0 brown,  4px  4px 0 brown,
+      0     4px 0 brown, -4px  4px 0 brown, -4px 0 0 brown;
   }
 }
 
