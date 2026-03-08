@@ -156,10 +156,17 @@
       let timer        = null;
       let switchCounts = <%= raw @session.pairs.map { |p| p.switches || 0 }.to_json %>;
       let audioCtx     = null;
-      let audioEnabled = true;
+      let audioEnabled = localStorage.getItem('audioEnabled') !== 'false';
+      document.getElementById('audio-icon').textContent  = audioEnabled ? '🔔' : '🔕';
+      document.getElementById('audio-label').textContent = audioEnabled ? 'Sound on' : 'Sound off';
 
       const pairEls    = document.querySelectorAll('.pair-display');
       const pairsLeft  = document.getElementById('pairs-left');
+
+      window.addEventListener('pagehide', () => {
+        if (timer) { clearInterval(timer); timer = null; }
+        if (audioCtx) { audioCtx.close(); audioCtx = null; }
+      });
 
       function getAudioCtx() {
         if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -270,6 +277,7 @@
         },
         toggleAudio() {
           audioEnabled = !audioEnabled;
+          localStorage.setItem('audioEnabled', audioEnabled);
           document.getElementById('audio-icon').textContent  = audioEnabled ? '🔔' : '🔕';
           document.getElementById('audio-label').textContent = audioEnabled ? 'Sound on' : 'Sound off';
         },
