@@ -10,7 +10,7 @@ class Player < ApplicationRecord
   end
 
   def chord_pair_data
-    self.sessions.order(:created_at).inject(Hash.new { |h, k| h[k] = [] }) do |pairs, session|
+    self.sessions.includes(:pairs).order(:created_at).inject(Hash.new { |h, k| h[k] = [] }) do |pairs, session|
       if !session.complete
         return pairs
       end
