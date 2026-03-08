@@ -141,7 +141,7 @@
   </div>
 
   <script>
-    const Practice = (function () {
+    window.Practice = (function () {
       const PREP_SECS   = 5;
       const SWITCH_SECS = <%= Rails.env.development? ? 5 : @session.duration * 60 %>;
       const SESSION_ID  = <%= @session.id %>;

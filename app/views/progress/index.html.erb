@@ -37,8 +37,6 @@
       <canvas id="progressChart"></canvas>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
     <script>
       (function () {
         var PALETTE = "8dd3c7ffffb3bebadafb807280b1d3fdb462b3de69fccde5d9d9d9bc80bdccebc5ffed6f";
@@ -51,64 +49,78 @@
           return "rgba(" + r + "," + g + "," + b + "," + opacity + ")";
         }
 
-        var config = <%= raw @progress.to_json %>;
-        config.data.datasets.forEach(function (dataset, i) {
-          dataset.borderColor = paletteColor(i, 1.0);
-          dataset.backgroundColor = paletteColor(i, 0.3);
-        });
-        var chart = new Chart("progressChart", config);
+        function initChart() {
+          var config = <%= raw @progress.to_json %>;
+          config.data.datasets.forEach(function (dataset, i) {
+            dataset.borderColor = paletteColor(i, 1.0);
+            dataset.backgroundColor = paletteColor(i, 0.3);
+          });
+          var chart = new Chart("progressChart", config);
+          var currentXMin = null;
 
-        var currentXMin = null;
-
-        function recalcYMax() {
-          var yMax = 0;
-          chart.data.datasets.forEach(function(ds) {
-            if (ds.hidden) return;
-            ds.data.forEach(function(point) {
-              if (!currentXMin || new Date(point.x) >= currentXMin) {
-                yMax = Math.max(yMax, point.y);
-              }
+          function recalcYMax() {
+            var yMax = 0;
+            chart.data.datasets.forEach(function(ds) {
+              if (ds.hidden) return;
+              ds.data.forEach(function(point) {
+                if (!currentXMin || new Date(point.x) >= currentXMin) {
+                  yMax = Math.max(yMax, point.y);
+                }
+              });
             });
-          });
-          chart.options.scales.y.max = yMax > 0 ? Math.ceil(yMax * 1.1) : undefined;
-        }
-
-        function setRange(range) {
-          var now = new Date();
-          if (range === 'month') {
-            currentXMin = new Date(now.getFullYear(), now.getMonth() - 1, now.getDate());
-          } else if (range === 'year') {
-            currentXMin = new Date(now.getFullYear() - 1, now.getMonth(), now.getDate());
-          } else {
-            currentXMin = null;
+            chart.options.scales.y.max = yMax > 0 ? Math.ceil(yMax * 1.1) : undefined;
           }
-          chart.options.scales.x.min = currentXMin ? currentXMin.toISOString() : undefined;
-          recalcYMax();
-          chart.update();
 
-          document.querySelectorAll('.range-btn').forEach(function(btn) {
-            var active = btn.id === 'btn-' + range;
-            btn.classList.toggle('bg-blue-600', active);
-            btn.classList.toggle('text-white', active);
-            btn.classList.toggle('bg-white', !active);
-            btn.classList.toggle('dark:bg-gray-700', !active);
-            btn.classList.toggle('text-gray-700', !active);
-            btn.classList.toggle('dark:text-gray-300', !active);
-          });
+          function setRange(range) {
+            var now = new Date();
+            if (range === 'month') {
+              currentXMin = new Date(now.getFullYear(), now.getMonth() - 1, now.getDate());
+            } else if (range === 'year') {
+              currentXMin = new Date(now.getFullYear() - 1, now.getMonth(), now.getDate());
+            } else {
+              currentXMin = null;
+            }
+            chart.options.scales.x.min = currentXMin ? currentXMin.toISOString() : undefined;
+            recalcYMax();
+            chart.update();
+
+            document.querySelectorAll('.range-btn').forEach(function(btn) {
+              var active = btn.id === 'btn-' + range;
+              btn.classList.toggle('bg-blue-600', active);
+              btn.classList.toggle('text-white', active);
+              btn.classList.toggle('bg-white', !active);
+              btn.classList.toggle('dark:bg-gray-700', !active);
+              btn.classList.toggle('text-gray-700', !active);
+              btn.classList.toggle('dark:text-gray-300', !active);
+            });
+          }
+
+          function filterPair(label) {
+            chart.data.datasets.forEach(function(ds) {
+              ds.hidden = label !== 'all' && ds.label !== label;
+            });
+            recalcYMax();
+            chart.update();
+          }
+
+          window.setRange = setRange;
+          window.filterPair = filterPair;
+          setRange('month');
         }
 
-        function filterPair(label) {
-          chart.data.datasets.forEach(function(ds) {
-            ds.hidden = label !== 'all' && ds.label !== label;
-          });
-          recalcYMax();
-          chart.update();
+        if (typeof Chart !== 'undefined') {
+          initChart();
+        } else {
+          var s1 = document.createElement('script');
+          s1.src = 'https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js';
+          s1.onload = function () {
+            var s2 = document.createElement('script');
+            s2.src = 'https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter-date-fns.bundle.min.js';
+            s2.onload = initChart;
+            document.head.appendChild(s2);
+          };
+          document.head.appendChild(s1);
         }
-
-        window.setRange = setRange;
-        window.filterPair = filterPair;
-
-        setRange('month');
       })();
     </script>
   <% end %>
