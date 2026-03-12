@@ -96,8 +96,10 @@
           }
 
           function filterPair(label) {
-            chart.data.datasets.forEach(function(ds) {
-              ds.hidden = label !== 'all' && ds.label !== label;
+            chart.data.datasets.forEach(function(ds, i) {
+              var hidden = label !== 'all' && ds.label !== label;
+              ds.hidden = hidden;
+              chart.getDatasetMeta(i).hidden = hidden ? true : null;
             });
             recalcYMax();
             chart.update();
