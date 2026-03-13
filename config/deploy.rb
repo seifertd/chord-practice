@@ -38,6 +38,9 @@ append :linked_dirs, "log", "tmp/pids", "tmp/cache", "tmp/sockets", "public/syst
 # Default value for keep_releases is 5
 set :keep_releases, 3
 
+# tailwindcss-rails scans views/js to determine which CSS classes to emit,
+# so changes to these files must trigger asset recompilation on deploy.
+append :assets_dependencies, "app/views", "app/javascript", "app/components", "app/helpers"
 
 # RVM settings
 set :rvm_ruby_version, "ruby-3.3.10@chord-practice"
