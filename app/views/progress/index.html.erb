@@ -27,6 +27,7 @@
       <select id="pair-filter" onchange="filterPair(this.value)"
               class="rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-3 py-1.5 text-sm">
         <option value="all">All Pairs</option>
+        <option value="_custom_" style="display:none">Custom</option>
         <% @progress[:data][:datasets].each do |ds| %>
           <option value="<%= ds[:label] %>"><%= ds[:label] %></option>
         <% end %>
@@ -62,9 +63,8 @@
                 ds.hidden = !ds.hidden;
                 recalcYMax();
                 legend.chart.update();
-                // Reset dropdown so selecting "All Pairs" fires onchange even if it was already selected
                 var select = document.getElementById('pair-filter');
-                if (select) select.selectedIndex = -1;
+                if (select) select.value = '_custom_';
               }
             }
           };
