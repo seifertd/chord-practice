@@ -3,6 +3,10 @@ class RegistrationsController < ApplicationController
   end
 
   def create
+    if params[:website].present?
+      redirect_to root_path and return
+    end
+
     # Attach credentials to the current anonymous player; if already registered, start fresh.
     player = authenticated? ? Player.new : current_player
 
