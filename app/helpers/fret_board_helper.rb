@@ -17,13 +17,45 @@ module FretBoardHelper
 
     string_gap    = width.to_f  / (num_strings - 1)
     fret_gap      = height.to_f / (num_strings - 1)
-    canvas_width  = width  + left * 3
+
+    notes = chord.notes
+
+    # Determine fret offset — only for bar chords at fret 4+
+    bar_info     = notes[num_strings]
+    bar_fret_val = bar_info.is_a?(String) && bar_info.start_with?("B-") ? bar_info.split("-")[1].to_i : nil
+    show_indicator = bar_fret_val && bar_fret_val >= 4
+    fret_offset    = show_indicator ? bar_fret_val - 2 : 0
+
+    label_extra   = show_indicator ? (r * 7).ceil : 0
+    canvas_width  = width  + left * 3 + label_extra
     canvas_height = height + top  * 3
 
     els = []
 
-    # Fretboard background
+    # Fretboard background — nut line always drawn as rect top border
     els << %(<rect x="#{left}" y="#{top}" width="#{width}" height="#{height}" fill="white" stroke="black" stroke-width="2"/>)
+
+    # Position indicator: double zigzag centered between nut and fret 1, plus fret label
+    if show_indicator
+      overhang = r2(r * 1.5)
+      spacing  = r2(fret_gap * 0.15)
+      zag_h    = r2(fret_gap * 0.10)
+      [ -spacing / 2.0, spacing / 2.0 ].each do |dy|
+        y_line = r2(top + fret_gap * 0.5 + dy)
+        pts = [ "#{r2(left - overhang)},#{y_line}" ]
+        (num_strings - 1).times do |i|
+          x_peak = r2(left + (i + 0.5) * string_gap)
+          y_peak = i.even? ? r2(y_line - zag_h) : r2(y_line + zag_h)
+          pts << "#{x_peak},#{y_peak}"
+          pts << "#{r2(left + (i + 1) * string_gap)},#{y_line}"
+        end
+        pts << "#{r2(left + width + overhang)},#{y_line}"
+        els << %(<polyline points="#{pts.join(' ')}" fill="none" stroke="black" stroke-width="1.5"/>)
+      end
+      pos_x = r2(left + width + r * 1.5)
+      pos_y = r2(top - r * 3.4 + fret_gap * (bar_fret_val - fret_offset) + r)
+      els << %(<text x="#{pos_x}" y="#{pos_y}" font-size="#{r * 2.2 + 2}" font-family="sans-serif" dominant-baseline="middle" text-anchor="start" fill="white" stroke="black" stroke-width="2" paint-order="stroke fill">#{bar_fret_val}fr</text>)
+    end
 
     # Internal string (vertical) and fret (horizontal) lines
     1.upto(num_strings - 2) do |i|
@@ -33,14 +65,12 @@ module FretBoardHelper
       els << %(<line x1="#{left}" y1="#{fy}" x2="#{left + width}" y2="#{fy}" stroke="black" stroke-width="1"/>)
     end
 
-    notes = chord.notes
-
     # Bar chord — e.g. "B-1-21" or "B-1-61"
     if notes.length > num_strings
       bar = notes[num_strings]
       if bar.is_a?(String) && bar.start_with?("B-")
         _, bar_fret, bar_strings = bar.split("-")
-        bar_fret = bar_fret.to_f
+        bar_fret = bar_fret.to_f - fret_offset
         bar_y    = r2(top - r * 3.4 + fret_gap * bar_fret)
         s_start  = num_strings - bar_strings[0].to_i
         s_end    = num_strings - bar_strings[1].to_i
@@ -58,8 +88,9 @@ module FretBoardHelper
 
       cx = r2(left + string_gap * string_idx)
       if fret >= 0
-        fill = fret == 0 ? "white" : "black"
-        cy   = r2(top - r * 3.4 + fret_gap * fret + r)
+        display_fret = fret > 0 ? fret - fret_offset : fret
+        fill = display_fret == 0 ? "white" : "black"
+        cy   = r2(top - r * 3.4 + fret_gap * display_fret + r)
         els << %(<circle cx="#{cx}" cy="#{cy}" r="#{r}" fill="#{fill}" stroke="black" stroke-width="1"/>)
       else
         tx = r2(left * 1.2 + string_gap * string_idx - r)
