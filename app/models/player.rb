@@ -11,9 +11,7 @@ class Player < ApplicationRecord
 
   def chord_pair_data
     self.sessions.includes(:pairs).order(:created_at).inject(Hash.new { |h, k| h[k] = [] }) do |pairs, session|
-      if !session.complete
-        return pairs
-      end
+      next pairs unless session.complete
       session.pairs.inject(pairs) do |pairs, pair|
         pairs["#{pair.first}-#{pair.second}"] << { x: session.practiced_at.iso8601, y: (pair.switches.to_f / session.duration).round(1) }
         pairs

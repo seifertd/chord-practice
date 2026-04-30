@@ -45,16 +45,16 @@ class PlayerTest < ActiveSupport::TestCase
     assert_equal 3.3, data["A-G"].first[:y]    # 10 / 3 = 3.333... → 3.3
   end
 
-  test "chord_pair_data stops processing when it encounters an incomplete session" do
+  test "chord_pair_data skips incomplete sessions but includes later complete ones" do
     player = Player.create!(name: "Test", password: "password")
-    # Incomplete session has a lower id so it comes first in default order
     s1 = player.sessions.create!(duration: 1, complete: false)
     s1.pairs.create!(first: "A", second: "G", switches: 10)
     s2 = player.sessions.create!(duration: 1, complete: true)
     s2.pairs.create!(first: "D", second: "G", switches: 15)
 
     data = player.chord_pair_data
-    assert_not data.key?("D-G"), "should not include sessions after the incomplete one"
+    assert_not data.key?("A-G"), "should not include pairs from incomplete sessions"
+    assert data.key?("D-G"), "should include complete sessions after an incomplete one"
   end
 
   test "chord_pair_data x value is an ISO8601 timestamp" do
