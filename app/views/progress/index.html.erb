@@ -34,6 +34,74 @@
       </select>
     </div>
 
+    <%# Insight cards — click any coloured card to highlight that pair on the chart %>
+    <% if @stats && (@stats[:overall_pct] || @stats[:most_improved] || @stats[:most_practiced]) %>
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-5">
+
+        <%# Overall Progress (stat only, not clickable) %>
+        <% if @stats[:overall_pct] %>
+          <% positive = @stats[:overall_pct] >= 0 %>
+          <div class="rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-3">
+            <div class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1">Overall Progress</div>
+            <div class="text-2xl font-bold <%= positive ? 'text-green-600 dark:text-green-400' : 'text-red-500 dark:text-red-400' %>">
+              <%= positive ? '+' : '' %><%= @stats[:overall_pct] %>%
+            </div>
+            <div class="text-xs text-gray-400 dark:text-gray-500 mt-1">avg improvement, all pairs</div>
+          </div>
+        <% end %>
+
+        <%# Most Improved %>
+        <% if @stats[:most_improved] %>
+          <% p = @stats[:most_improved] %>
+          <div class="rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-3
+                      cursor-pointer hover:border-blue-400 dark:hover:border-blue-500
+                      hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors"
+               onclick="filterPair('<%= j(p[:label]) %>'); document.getElementById('pair-filter').value = '<%= j(p[:label]) %>';"
+               title="Click to highlight on chart">
+            <div class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1">Most Improved ↑</div>
+            <div class="text-lg font-semibold text-gray-900 dark:text-gray-100 truncate"><%= p[:label] %></div>
+            <div class="text-xs text-green-600 dark:text-green-400 mt-1">
+              +<%= p[:pct] %>% &bull; <%= p[:first] %> → <%= p[:last] %> sw/min
+            </div>
+          </div>
+        <% end %>
+
+        <%# Needs Work (least improved / most regressed) %>
+        <% if @stats[:least_improved] %>
+          <% p = @stats[:least_improved] %>
+          <% positive = p[:pct] >= 0 %>
+          <div class="rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-3
+                      cursor-pointer hover:border-blue-400 dark:hover:border-blue-500
+                      hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors"
+               onclick="filterPair('<%= j(p[:label]) %>'); document.getElementById('pair-filter').value = '<%= j(p[:label]) %>';"
+               title="Click to highlight on chart">
+            <div class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1">Needs Work ↓</div>
+            <div class="text-lg font-semibold text-gray-900 dark:text-gray-100 truncate"><%= p[:label] %></div>
+            <div class="text-xs <%= positive ? 'text-yellow-600 dark:text-yellow-400' : 'text-red-500 dark:text-red-400' %> mt-1">
+              <%= positive ? '+' : '' %><%= p[:pct] %>% &bull; <%= p[:first] %> → <%= p[:last] %> sw/min
+            </div>
+          </div>
+        <% end %>
+
+        <%# Most Practiced %>
+        <% if @stats[:most_practiced] %>
+          <% p = @stats[:most_practiced] %>
+          <div class="rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-3
+                      cursor-pointer hover:border-blue-400 dark:hover:border-blue-500
+                      hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors"
+               onclick="filterPair('<%= j(p[:label]) %>'); document.getElementById('pair-filter').value = '<%= j(p[:label]) %>';"
+               title="Click to highlight on chart">
+            <div class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1">Most Practiced</div>
+            <div class="text-lg font-semibold text-gray-900 dark:text-gray-100 truncate"><%= p[:label] %></div>
+            <div class="text-xs text-blue-600 dark:text-blue-400 mt-1">
+              <%= p[:count] %> <%= 'session'.pluralize(p[:count]) %>
+            </div>
+          </div>
+        <% end %>
+
+      </div>
+    <% end %>
+
     <div class="relative">
       <canvas id="progressChart"></canvas>
     </div>
