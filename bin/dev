@@ -1,2 +1,7 @@
 #!/usr/bin/env ruby
+
+# The tailwindcss-ruby gem's bundled binary crashes with "Bad file descriptor"
+# on this machine, so point it at the standalone tailwindcss install instead.
+ENV["TAILWINDCSS_INSTALL_DIR"] ||= "/home/doug/External/bin"
+
 exec "foreman", "start", "-f", "Procfile.dev", *ARGV
