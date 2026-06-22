@@ -51,4 +51,29 @@ class SessionsControllerTest < ActionDispatch::IntegrationTest
     post sessions_path, params: { session: { duration: 3, selected_pairs: [ "A-B" ] } }
     assert_equal 3, @player.sessions.last.duration
   end
+
+  # Blocklist
+
+  test "index excludes blocked pairs from available pairs" do
+    player = Player.create!(name: "Blocky", password: "password", uuid: "blocky-player",
+                            chords: %w[A B C])
+    player.block_pair("A", "B")
+    cookies[:player_id] = player.uuid
+
+    get sessions_path
+    pair_field = 'input[name="session[selected_pairs][]"]'
+    assert_select "#{pair_field}[value=?]", "A-C"
+    assert_select "#{pair_field}[value=?]", "B-C"
+    assert_select "#{pair_field}[value=?]", "A-B", false, "blocked pair should not be selectable"
+  end
+
+  test "create in random mode does not generate blocked pairs" do
+    player = Player.create!(name: "Blocky2", password: "password", uuid: "blocky2-player",
+                            chords: %w[A B])
+    player.block_pair("A", "B")  # the only possible pair is now blocked
+    cookies[:player_id] = player.uuid
+
+    post sessions_path, params: { session: { duration: 1, number_of_pairs: 5 } }
+    assert_equal 0, player.sessions.last.pairs.count
+  end
 end

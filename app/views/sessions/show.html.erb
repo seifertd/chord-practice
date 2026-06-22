@@ -150,6 +150,18 @@
       </div>
 
     </div>
+
+    <%# Skip control — available between pairs (ready / next states) %>
+    <div id="skip-bar" class="mt-6 text-center text-sm">
+      <button onclick="Practice.skip()"
+              class="text-gray-500 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 underline">
+        Skip this pair
+      </button>
+      <label class="ml-3 inline-flex items-center gap-1.5 text-gray-500 dark:text-gray-400 cursor-pointer">
+        <input type="checkbox" id="skip-block" class="rounded border-gray-300 dark:border-gray-600">
+        Don&rsquo;t show this pair again
+      </label>
+    </div>
   </div>
 
   <script>
@@ -172,8 +184,9 @@
       document.getElementById('audio-icon').textContent  = audioEnabled ? '🔔' : '🔕';
       document.getElementById('audio-label').textContent = audioEnabled ? 'Sound on' : 'Sound off';
 
-      const pairEls    = document.querySelectorAll('.pair-display');
+      let pairEls      = Array.from(document.querySelectorAll('.pair-display'));
       const pairsLeft  = document.getElementById('pairs-left');
+      const skipBar    = document.getElementById('skip-bar');
 
       window.addEventListener('pagehide', () => {
         if (timer) { clearInterval(timer); timer = null; }
@@ -235,6 +248,7 @@
 
       function render() {
         STATES.forEach(s => document.getElementById('state-' + s).classList.toggle('hidden', s !== state));
+        skipBar.classList.toggle('hidden', !(state === 'ready' || state === 'next'));
         if (state === 'waiting')    document.getElementById('countdown-waiting').textContent   = countdown;
         if (state === 'switching')  document.getElementById('countdown-switching').textContent = countdown;
         if (state === 'next')       document.getElementById('recorded-count').textContent      = switchCounts[pairIdx - 1];
@@ -276,6 +290,17 @@
         });
       }
 
+      // Mark the session complete (all remaining pairs are done) and view results.
+      function finalize() {
+        state = 'complete';
+        render();
+        fetch('/sessions/' + SESSION_ID, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': CSRF },
+          body: JSON.stringify({ complete: true, pairs: PAIR_IDS.map((id, i) => ({ id: id, switches: switchCounts[i] })) })
+        }).then(() => { window.location.href = '/sessions/' + SESSION_ID; });
+      }
+
       return {
         start() {
           // Resume AudioContext in case the browser suspended it
@@ -292,6 +317,37 @@
           localStorage.setItem('audioEnabled', audioEnabled);
           document.getElementById('audio-icon').textContent  = audioEnabled ? '🔔' : '🔕';
           document.getElementById('audio-label').textContent = audioEnabled ? 'Sound on' : 'Sound off';
+        },
+        skip() {
+          if (timer) { clearInterval(timer); timer = null; }
+          const pairId = PAIR_IDS[pairIdx];
+          const block  = document.getElementById('skip-block').checked;
+          fetch('/pairs/' + pairId + (block ? '?block=true' : ''), {
+            method: 'DELETE',
+            headers: { 'X-CSRF-Token': CSRF }
+          });
+
+          // Drop the skipped pair from the parallel arrays and remove its display
+          pairEls[pairIdx].remove();
+          pairEls.splice(pairIdx, 1);
+          PAIR_IDS.splice(pairIdx, 1);
+          switchCounts.splice(pairIdx, 1);
+          document.getElementById('skip-block').checked = false;
+
+          if (pairIdx >= PAIR_IDS.length) {
+            // Nothing left to practice at or after this slot
+            if (PAIR_IDS.length === 0) {
+              window.location.href = '/sessions';   // every pair was skipped
+            } else {
+              finalize();                            // earlier pairs were completed
+            }
+            return;
+          }
+
+          // The following pair shifted into this slot — show it and wait for Start
+          showPair(pairIdx);
+          state = 'ready';
+          render();
         },
         record() {
           const input = document.getElementById('switches-input');

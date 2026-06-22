@@ -2,11 +2,23 @@ class Player < ApplicationRecord
   has_secure_password
   has_many :login_sessions, dependent: :destroy
   serialize :chords, coder: YAML, type: Array
+  serialize :blocked_pairs, coder: YAML, type: Array
   has_many :sessions, dependent: :destroy
   normalizes :email_address, with: ->(e) { e.strip.downcase }
 
   def start_practice_session(options)
     self.sessions.create(options)
+  end
+
+  # Add a chord pair to the blocklist so it is excluded from future sessions.
+  # Keys are stored as "first-second" (chords in alphabetical order, matching
+  # how pairs are generated).
+  def block_pair(first, second)
+    update(blocked_pairs: blocked_pairs | [ "#{first}-#{second}" ])
+  end
+
+  def pair_blocked?(first, second)
+    blocked_pairs.include?("#{first}-#{second}")
   end
 
   def chord_pair_data

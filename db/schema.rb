@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_07_012200) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_22_232031) do
   create_table "login_sessions", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "ip_address"
@@ -32,6 +32,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_07_012200) do
   end
 
   create_table "players", force: :cascade do |t|
+    t.text "blocked_pairs", default: "--- []\n"
     t.text "chords", default: "--- []\n"
     t.datetime "created_at", precision: nil, null: false
     t.string "email_address"
@@ -55,6 +56,4 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_07_012200) do
   end
 
   add_foreign_key "login_sessions", "players"
-  add_foreign_key "pairs", "sessions"
-  add_foreign_key "sessions", "players"
 end
