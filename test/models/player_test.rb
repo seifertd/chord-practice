@@ -165,4 +165,31 @@ class PlayerTest < ActiveSupport::TestCase
     player = Player.create!(name: "Test", password: "password")
     assert_nil player.best_switches_by_pair["A-G"]
   end
+
+  # blocked_pairs
+
+  test "blocked_pairs defaults to an empty array" do
+    player = Player.create!(name: "Test", password: "password")
+    assert_equal [], player.blocked_pairs
+  end
+
+  test "block_pair adds the pair to the blocklist" do
+    player = Player.create!(name: "Test", password: "password")
+    player.block_pair("A", "G")
+    assert_equal [ "A-G" ], player.reload.blocked_pairs
+  end
+
+  test "block_pair is idempotent" do
+    player = Player.create!(name: "Test", password: "password")
+    player.block_pair("A", "G")
+    player.block_pair("A", "G")
+    assert_equal [ "A-G" ], player.reload.blocked_pairs
+  end
+
+  test "pair_blocked? reflects the blocklist" do
+    player = Player.create!(name: "Test", password: "password")
+    player.block_pair("A", "G")
+    assert player.pair_blocked?("A", "G")
+    assert_not player.pair_blocked?("A", "D")
+  end
 end

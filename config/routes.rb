@@ -3,6 +3,7 @@ Rails.application.routes.draw do
 
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
   resources :sessions, only: [ :index, :show, :create, :destroy, :update ]
+  resources :pairs, only: [ :destroy ]
   resources :progress, only: [ :index ]
   root "static_pages#home"
   resource :chords, only: [ :show, :update ]

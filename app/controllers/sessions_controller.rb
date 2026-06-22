@@ -2,7 +2,7 @@ class SessionsController < ApplicationController
   before_action :get_session, only: [ :show, :destroy, :update ]
   def index
     @sessions = current_player.sessions.includes(:pairs).order(created_at: :desc)
-    @available_pairs = current_player.chords.sort.combination(2).map { |a, b| "#{a}-#{b}" }
+    @available_pairs = current_player.chords.sort.combination(2).map { |a, b| "#{a}-#{b}" } - current_player.blocked_pairs
   end
 
   def show
@@ -34,7 +34,8 @@ class SessionsController < ApplicationController
     else
       @session.generate_random_pairs(
         params[:session][:number_of_pairs].to_i,
-        chords: current_player.chords.map { |name| Chord.all.find { |chord| chord.name == name } }
+        chords: current_player.chords.map { |name| Chord.all.find { |chord| chord.name == name } },
+        blocked: current_player.blocked_pairs
       )
       @session.save!
     end

@@ -42,6 +42,14 @@ class SessionTest < ActiveSupport::TestCase
     assert_equal 1, session.pairs.size
   end
 
+  test "generate_random_pairs excludes blocked pairs" do
+    chords = Chord.all.select { |c| %w[A D G].include?(c.name) }
+    session = Session.new(player: players(:one))
+    session.generate_random_pairs(10, chords: chords, blocked: [ "A-D", "A-G" ])
+    pair_names = session.pairs.map { |p| "#{p.first}-#{p.second}" }
+    assert_equal [ "D-G" ], pair_names
+  end
+
   # started
 
   test "started is false when the session has no pairs" do
