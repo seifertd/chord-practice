@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+# Rebuild Tailwind CSS on file changes using an external inotify watcher.
+#
+# Why this exists: tailwindcss v4.3.1's bundled Bun runtime crashes its native
+# `--watch` with "Bad file descriptor" on this kernel (one-shot builds work
+# fine). So instead of `tailwindcss:watch`, we watch the source tree with
+# inotifywait and run a one-shot build on every change.
+set -euo pipefail
+
+cd "$(dirname "$0")/.."
+
+BIN="${TAILWINDCSS_INSTALL_DIR:-/home/doug/External/bin}/tailwindcss"
+INPUT="app/assets/tailwind/application.css"
+OUTPUT="app/assets/builds/tailwind.css"
+
+# Directories Tailwind scans for class usage (mirrors the @source paths in
+# app/assets/tailwind/application.css) plus the input stylesheet's directory.
+# Only the ones that exist are watched.
+CANDIDATE_DIRS=(app/views app/helpers app/javascript app/components app/assets/tailwind)
+WATCH_DIRS=()
+for dir in "${CANDIDATE_DIRS[@]}"; do
+  [ -d "$dir" ] && WATCH_DIRS+=("$dir")
+done
+
+build() {
+  "$BIN" -i "$INPUT" -o "$OUTPUT" --minify
+}
+
+echo "≈ rebuild-css: initial build"
+build
+
+echo "≈ rebuild-css: watching ${WATCH_DIRS[*]}"
+inotifywait -q -m -r -e modify,create,delete,move "${WATCH_DIRS[@]}" |
+  while read -r _; do
+    # Drain a burst of events (editor saves often emit several) before building.
+    while read -r -t 0.2 _; do :; done
+    echo "≈ rebuild-css: change detected, rebuilding"
+    build || echo "≈ rebuild-css: build failed (continuing)"
+  done
