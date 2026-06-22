@@ -19,6 +19,32 @@ class Player < ApplicationRecord
     end
   end
 
+  # Most recent switch count for each chord pair, drawn from completed sessions.
+  # Keyed by "first-second". Optionally excludes a session (e.g. the one in progress).
+  def last_switches_by_pair(excluding_session: nil)
+    scope = self.sessions.where(complete: true).includes(:pairs).order(practiced_at: :desc)
+    scope = scope.where.not(id: excluding_session.id) if excluding_session&.persisted?
+    scope.each_with_object({}) do |session, result|
+      session.pairs.each do |pair|
+        key = "#{pair.first}-#{pair.second}"
+        result[key] ||= pair.switches
+      end
+    end
+  end
+
+  # Highest switch count ever achieved for each chord pair, from completed sessions.
+  # Keyed by "first-second". Optionally excludes a session (e.g. the one in progress).
+  def best_switches_by_pair(excluding_session: nil)
+    scope = self.sessions.where(complete: true).includes(:pairs)
+    scope = scope.where.not(id: excluding_session.id) if excluding_session&.persisted?
+    scope.each_with_object({}) do |session, result|
+      session.pairs.each do |pair|
+        key = "#{pair.first}-#{pair.second}"
+        result[key] = pair.switches if result[key].nil? || pair.switches > result[key]
+      end
+    end
+  end
+
   def chord_pairs
     self.sessions.inject(Hash.new(0)) do |pairs, session|
       session.pairs.inject(pairs) do |pairs, pair|

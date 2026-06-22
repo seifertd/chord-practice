@@ -94,4 +94,75 @@ class PlayerTest < ActiveSupport::TestCase
     assert_equal 2, player.chord_pairs["A-G"]
     assert_equal 1, player.chord_pairs["D-G"]
   end
+
+  # last_switches_by_pair
+
+  test "last_switches_by_pair returns the switch count from the most recent completed session" do
+    player = Player.create!(name: "Test", password: "password")
+    older = player.sessions.create!(duration: 1, complete: true, practiced_at: 2.days.ago)
+    older.pairs.create!(first: "A", second: "G", switches: 10)
+    newer = player.sessions.create!(duration: 1, complete: true, practiced_at: 1.day.ago)
+    newer.pairs.create!(first: "A", second: "G", switches: 18)
+
+    assert_equal 18, player.last_switches_by_pair["A-G"]
+  end
+
+  test "last_switches_by_pair ignores incomplete sessions" do
+    player = Player.create!(name: "Test", password: "password")
+    incomplete = player.sessions.create!(duration: 1, complete: false)
+    incomplete.pairs.create!(first: "A", second: "G", switches: 99)
+
+    assert_nil player.last_switches_by_pair["A-G"]
+  end
+
+  test "last_switches_by_pair excludes the given session" do
+    player = Player.create!(name: "Test", password: "password")
+    past = player.sessions.create!(duration: 1, complete: true, practiced_at: 1.day.ago)
+    past.pairs.create!(first: "A", second: "G", switches: 12)
+    current = player.sessions.create!(duration: 1, complete: false)
+    current.pairs.create!(first: "A", second: "G")
+
+    result = player.last_switches_by_pair(excluding_session: current)
+    assert_equal 12, result["A-G"]
+  end
+
+  test "last_switches_by_pair returns nil for a pair never practiced" do
+    player = Player.create!(name: "Test", password: "password")
+    assert_nil player.last_switches_by_pair["A-G"]
+  end
+
+  # best_switches_by_pair
+
+  test "best_switches_by_pair returns the highest switch count regardless of recency" do
+    player = Player.create!(name: "Test", password: "password")
+    s1 = player.sessions.create!(duration: 1, complete: true, practiced_at: 2.days.ago)
+    s1.pairs.create!(first: "A", second: "G", switches: 25)
+    s2 = player.sessions.create!(duration: 1, complete: true, practiced_at: 1.day.ago)
+    s2.pairs.create!(first: "A", second: "G", switches: 18)
+
+    assert_equal 25, player.best_switches_by_pair["A-G"]
+  end
+
+  test "best_switches_by_pair ignores incomplete sessions" do
+    player = Player.create!(name: "Test", password: "password")
+    incomplete = player.sessions.create!(duration: 1, complete: false)
+    incomplete.pairs.create!(first: "A", second: "G", switches: 99)
+
+    assert_nil player.best_switches_by_pair["A-G"]
+  end
+
+  test "best_switches_by_pair excludes the given session" do
+    player = Player.create!(name: "Test", password: "password")
+    past = player.sessions.create!(duration: 1, complete: true, practiced_at: 1.day.ago)
+    past.pairs.create!(first: "A", second: "G", switches: 12)
+    current = player.sessions.create!(duration: 1, complete: false)
+    current.pairs.create!(first: "A", second: "G", switches: 50)
+
+    assert_equal 12, player.best_switches_by_pair(excluding_session: current)["A-G"]
+  end
+
+  test "best_switches_by_pair returns nil for a pair never practiced" do
+    player = Player.create!(name: "Test", password: "password")
+    assert_nil player.best_switches_by_pair["A-G"]
+  end
 end

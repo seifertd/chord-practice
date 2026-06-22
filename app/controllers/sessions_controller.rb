@@ -12,6 +12,8 @@ class SessionsController < ApplicationController
         [ pair, chord_lookup[pair.first], chord_lookup[pair.second] ]
       end
       @start_pair_idx = @session.pairs.index { |p| !p.complete } || 0
+      @previous_switches = current_player.last_switches_by_pair(excluding_session: @session)
+      @best_switches = current_player.best_switches_by_pair(excluding_session: @session)
     end
   end
 
