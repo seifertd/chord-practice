@@ -43,5 +43,7 @@ set :keep_releases, 3
 append :assets_dependencies, "app/views", "app/javascript", "app/components", "app/helpers"
 
 # RVM settings
-set :rvm_ruby_version, "ruby-3.3.10@chord-practice"
+# Single source of truth: derive ruby@gemset from the version-controlled files so
+# a Ruby/gemset bump can't leave the systemd unit pinned to a stale rvm wrapper.
+set :rvm_ruby_version, "ruby-#{File.read(".ruby-version").strip}@#{File.read(".ruby-gemset").strip}"
 set :rvm_type, :system

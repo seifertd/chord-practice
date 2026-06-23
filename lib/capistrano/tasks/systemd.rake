@@ -1,9 +1,45 @@
+require "erb"
+require "stringio"
+
 namespace :deploy do
-  task :restart do
+  # Path to the user systemd unit on the target host (relative to $HOME).
+  set :systemd_user_dir, -> { ".config/systemd/user" }
+  # The systemd unit name (this app's service is "chordpractice", not the
+  # hyphenated application name).
+  set :service_name, -> { "chordpractice" }
+  # Port the Rails server binds to (nginx proxies to this).
+  set :app_port, -> { 4000 }
+
+  desc "Install/update the systemd user unit from the version-controlled template"
+  task :install_systemd_unit do
+    # Evaluated here, at task-body level, where the Capistrano DSL is available.
+    working_directory = current_path
+    rails_env         = fetch(:rails_env, "production")
+    app_port          = fetch(:app_port)
+    rvm_path          = fetch(:rvm_path, "/usr/local/rvm")
+    # The rvm wrapper for the deployed ruby@gemset — the single source of truth
+    # that keeps the unit's ruby in sync with :rvm_ruby_version on every deploy.
+    wrapper_bin       = "#{rvm_path}/wrappers/#{fetch(:rvm_ruby_version)}/bundle"
+
+    template = File.expand_path("../../../../config/deploy/templates/systemd_service.erb", __FILE__)
+    rendered = ERB.new(File.read(template), trim_mode: "-").result(binding)
+
+    unit_dir = fetch(:systemd_user_dir)
+    unit     = "#{unit_dir}/#{fetch(:service_name)}.service"
+
     on roles(:app) do
-      execute :systemctl, "--user restart chordpractice.service"
+      execute :mkdir, "-p", unit_dir
+      upload! StringIO.new(rendered), unit
+      execute :systemctl, "--user", "daemon-reload"
     end
   end
 
-  after :publishing, :restart
+  task :restart do
+    on roles(:app) do
+      execute :systemctl, "--user", "restart", "#{fetch(:service_name)}.service"
+    end
+  end
+
+  after :publishing, :install_systemd_unit
+  after :install_systemd_unit, :restart
 end
