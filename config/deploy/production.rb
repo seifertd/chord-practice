@@ -3,7 +3,7 @@
 # Defines a single server with a list of roles and multiple properties.
 # You can define all roles on a single server, or split them:
 
-server "das", user: "doug", roles: %w[app web db]
+server "capo", user: "doug", roles: %w[app web db]
 
 set :deploy_to, "/home/doug/webapps/chord-practice/production"
 
