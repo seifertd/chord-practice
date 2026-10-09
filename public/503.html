@@ -4,110 +4,113 @@
 
   <head>
 
-    <title>Down for maintenance (503 Service Unavailable)</title>
+    <title>Chord Practice - Down for maintenance</title>
 
     <meta charset="utf-8">
     <meta name="viewport" content="initial-scale=1, width=device-width">
     <meta name="robots" content="noindex, nofollow">
 
+    <!-- Self-contained on purpose: while shared/maintenance.html exists, nginx
+         answers EVERY request with this file, so it can't load assets or
+         favicons from the app. The logo is app/assets/images/guitar.png inlined. -->
     <style>
 
-      *, *::before, *::after {
-        box-sizing: border-box;
-      }
-
-      * {
-        margin: 0;
-      }
-
-      html {
-        font-size: 16px;
-      }
-
-      body {
-        background: #FFF;
-        color: #261B23;
-        display: grid;
-        font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, Aptos, Roboto, "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-        font-size: clamp(1rem, 2.5vw, 2rem);
-        -webkit-font-smoothing: antialiased;
-        font-style: normal;
-        font-weight: 400;
-        letter-spacing: -0.0025em;
-        line-height: 1.4;
-        min-height: 100dvh;
-        place-items: center;
-        text-rendering: optimizeLegibility;
-        -webkit-text-size-adjust: 100%;
-      }
-
-      #error-id {
-        color: #f0eff0;
-      }
-
-      #error-description {
-        color: #d30001;
+      :root {
+        --bg: #fff;
+        --text: #111827;
+        --muted: #6b7280;
+        --border: #e5e7eb;
+        --ink: #374151;
+        --button: #1d4ed8;
+        --button-hover: #1e40af;
       }
 
       @media (prefers-color-scheme: dark) {
-        body {
-          background: #101010;
-          color: #e0e0e0;
-        }
-
-        #error-description {
-          color: #FF6161;
-        }
-
-        #error-id {
-          color: #2c2c2c;
+        :root {
+          --bg: #1f2937;
+          --text: #fff;
+          --muted: #9ca3af;
+          --border: #374151;
+          --ink: #d1d5db;
+          --button: #2563eb;
+          --button-hover: #1d4ed8;
         }
       }
 
-      b, strong {
-        font-weight: 700;
+      *, *::before, *::after {
+        box-sizing: border-box;
+        margin: 0;
+      }
+
+      body {
+        background: var(--bg);
+        color: var(--text);
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        line-height: 1.5;
+        min-height: 100dvh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      nav {
+        border-bottom: 1px solid var(--border);
+        padding: 0.625rem 1rem;
+      }
+
+      nav a {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: inherit;
+        text-decoration: none;
+        font-size: 1.25rem;
+        font-weight: 600;
+        white-space: nowrap;
+      }
+
+      nav img {
+        height: 2rem;
       }
 
       main {
+        flex: 1;
         display: grid;
-        gap: 1em;
-        padding: 2em;
-        place-items: center;
+        place-content: center;
+        justify-items: center;
+        gap: 1.25rem;
+        padding: 2rem 1rem;
         text-align: center;
       }
 
-      main header {
-        display: grid;
-        place-items: center;
-        width: min(100%, 12em);
+      main svg {
+        width: 9rem;
+        height: auto;
+        color: var(--ink);
       }
 
-      main header #error-id {
-        font-size: 5em;
-        font-weight: 900;
-        letter-spacing: -0.05em;
-        line-height: 1;
-      }
-
-      main header #error-description {
-        font-size: 75%;
+      h1 {
+        font-size: 1.875rem;
         font-weight: 700;
+        letter-spacing: -0.01em;
       }
 
-      main article {
-        width: min(100%, 30em);
+      p {
+        color: var(--muted);
+        max-width: 28rem;
       }
 
-      main article p {
-        font-size: 75%;
+      .button {
+        color: #fff;
+        background: var(--button);
+        border-radius: 0.5rem;
+        font-size: 0.875rem;
+        font-weight: 500;
+        padding: 0.5rem 1rem;
+        text-decoration: none;
       }
 
-      main article br {
-        display: none;
-
-        @media(min-width: 48em) {
-          display: inline;
-        }
+      .button:hover {
+        background: var(--button-hover);
       }
 
     </style>
@@ -116,17 +119,33 @@
 
   <body>
 
-    <!-- This file lives in public/503.html. nginx serves it directly while
-         shared/maintenance.html exists; see config/deploy/nginx. -->
+    <nav>
+      <a href="/">
+        <img src="data:image/png;base64,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" alt="">
+        Chord Practice
+      </a>
+    </nav>
 
     <main>
-      <header>
-        <div id="error-id">503</div>
-        <div id="error-description">Down for maintenance</div>
-      </header>
-      <article>
-        <p><strong>Chord Practice is down for a few minutes of maintenance.</strong><br> Please try again shortly.</p>
-      </article>
+      <!-- A chord box with every string muted: the "rest" chord. -->
+      <svg viewBox="0 0 120 150" role="img" aria-label="Chord diagram with all six strings muted" fill="none" stroke="currentColor" stroke-linecap="round">
+        <g stroke-width="2.5">
+          <path d="M14 8l8 8m0-8l-8 8"/>
+          <path d="M32 8l8 8m0-8l-8 8"/>
+          <path d="M50 8l8 8m0-8l-8 8"/>
+          <path d="M68 8l8 8m0-8l-8 8"/>
+          <path d="M86 8l8 8m0-8l-8 8"/>
+          <path d="M104 8l8 8m0-8l-8 8"/>
+        </g>
+        <path d="M18 28h90" stroke-width="6"/>
+        <g stroke-width="1.5">
+          <path d="M18 56h90M18 84h90M18 112h90M18 140h90"/>
+          <path d="M18 28v112M36 28v112M54 28v112M72 28v112M90 28v112M108 28v112"/>
+        </g>
+      </svg>
+      <h1>Taking a short break</h1>
+      <p>Chord Practice is down for a few minutes of maintenance. Your progress is safe. Please try again shortly.</p>
+      <a class="button" href="/">Try again</a>
     </main>
 
   </body>
