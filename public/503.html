@@ -1,0 +1,134 @@
+<!doctype html>
+
+<html lang="en">
+
+  <head>
+
+    <title>Down for maintenance (503 Service Unavailable)</title>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, width=device-width">
+    <meta name="robots" content="noindex, nofollow">
+
+    <style>
+
+      *, *::before, *::after {
+        box-sizing: border-box;
+      }
+
+      * {
+        margin: 0;
+      }
+
+      html {
+        font-size: 16px;
+      }
+
+      body {
+        background: #FFF;
+        color: #261B23;
+        display: grid;
+        font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, Aptos, Roboto, "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+        font-size: clamp(1rem, 2.5vw, 2rem);
+        -webkit-font-smoothing: antialiased;
+        font-style: normal;
+        font-weight: 400;
+        letter-spacing: -0.0025em;
+        line-height: 1.4;
+        min-height: 100dvh;
+        place-items: center;
+        text-rendering: optimizeLegibility;
+        -webkit-text-size-adjust: 100%;
+      }
+
+      #error-id {
+        color: #f0eff0;
+      }
+
+      #error-description {
+        color: #d30001;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        body {
+          background: #101010;
+          color: #e0e0e0;
+        }
+
+        #error-description {
+          color: #FF6161;
+        }
+
+        #error-id {
+          color: #2c2c2c;
+        }
+      }
+
+      b, strong {
+        font-weight: 700;
+      }
+
+      main {
+        display: grid;
+        gap: 1em;
+        padding: 2em;
+        place-items: center;
+        text-align: center;
+      }
+
+      main header {
+        display: grid;
+        place-items: center;
+        width: min(100%, 12em);
+      }
+
+      main header #error-id {
+        font-size: 5em;
+        font-weight: 900;
+        letter-spacing: -0.05em;
+        line-height: 1;
+      }
+
+      main header #error-description {
+        font-size: 75%;
+        font-weight: 700;
+      }
+
+      main article {
+        width: min(100%, 30em);
+      }
+
+      main article p {
+        font-size: 75%;
+      }
+
+      main article br {
+        display: none;
+
+        @media(min-width: 48em) {
+          display: inline;
+        }
+      }
+
+    </style>
+
+  </head>
+
+  <body>
+
+    <!-- This file lives in public/503.html. nginx serves it directly while
+         shared/maintenance.html exists; see config/deploy/nginx. -->
+
+    <main>
+      <header>
+        <div id="error-id">503</div>
+        <div id="error-description">Down for maintenance</div>
+      </header>
+      <article>
+        <p><strong>Chord Practice is down for a few minutes of maintenance.</strong><br> Please try again shortly.</p>
+      </article>
+    </main>
+
+  </body>
+
+</html>
