@@ -63,4 +63,4 @@ group :development do
   gem "capistrano-rails", require: false
 end
 
-gem "tailwindcss-rails", "~> 4.6"
+gem "tailwindcss-rails", "~> 4.7"
